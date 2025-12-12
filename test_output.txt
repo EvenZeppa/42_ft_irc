@@ -1,0 +1,171 @@
+
+╔════════════════════════════════════════╗
+║     IRC SERVER TEST SUITE              ║
+║  Testing Server, Client, and Channel  ║
+╚════════════════════════════════════════╝
+
+═══════════════════════════════════════
+         UNIT TESTS
+═══════════════════════════════════════
+
+========== CLIENT TESTS ==========
+
+--- Constructor Tests ---
+✓ test_client_default_constructor passed
+✓ test_client_fd_constructor passed
+
+--- Getter/Setter Tests ---
+✓ test_client_realname_getter_setter passed
+✓ test_client_username_getter_setter passed
+✓ test_client_nickname_getter_setter passed
+✓ test_client_hostname_getter_setter passed
+✓ test_client_fd_getter_setter passed
+✓ test_client_epoll_fd_getter_setter passed
+✓ test_client_setters_chaining passed
+
+--- Fullmask Tests ---
+✓ test_client_fullmask passed
+✓ test_client_fullmask_empty passed
+
+--- Registration State Tests ---
+✓ test_client_pass_received passed
+✓ test_client_nick_received passed
+✓ test_client_user_received passed
+✓ test_client_registered passed
+✓ test_client_registration_sequence passed
+
+--- Ping/Pong Timestamp Tests ---
+✓ test_client_ping_timestamp passed
+✓ test_client_pong_timestamp passed
+✓ test_client_ping_pong_difference passed
+
+--- Mode Tests ---
+✓ test_client_add_mode passed
+✓ test_client_remove_mode passed
+✓ test_client_multiple_modes passed
+✓ test_client_remove_nonexistent_mode passed
+✓ test_client_duplicate_mode passed
+
+--- Buffer Tests ---
+✓ test_client_read_buffer_empty passed
+✓ test_client_append_to_read_buffer passed
+✓ test_client_clear_read_buffer passed
+✓ test_client_write_buffer_empty passed
+✓ test_client_append_to_write_buffer passed
+✓ test_client_clear_write_buffer passed
+✓ test_client_buffer_modification_via_reference passed
+✓ test_client_partial_buffer_processing passed
+
+--- Channel Membership Tests ---
+✓ test_client_join_channel passed
+✓ test_client_leave_channel passed
+✓ test_client_multiple_channels passed
+✓ test_client_isInChannel_nonexistent passed
+✓ test_client_leave_channel_not_joined passed
+✓ test_client_rejoin_channel passed
+✓ test_client_duplicate_join passed
+
+--- Edge Case Tests ---
+✓ test_client_empty_strings passed
+✓ test_client_special_characters passed
+✓ test_client_long_strings passed
+✓ test_client_negative_fd passed
+✓ test_client_large_fd passed
+✓ test_client_timestamp_edge_cases passed
+
+--- Complex Scenario Tests ---
+✓ test_client_full_lifecycle passed
+✓ test_client_disconnect_cleanup passed
+========== ALL CLIENT TESTS PASSED ==========
+
+========== CHANNEL TESTS ==========
+
+--- Constructor Tests ---
+✓ test_channel_default_constructor passed
+✓ test_channel_name_constructor passed
+
+--- Getter/Setter Tests ---
+✓ test_channel_name_getter_setter passed
+✓ test_channel_topic_getter_setter passed
+✓ test_channel_topic_setter_getter_setter passed
+✓ test_channel_topic_set_time_getter_setter passed
+✓ test_channel_key_getter_setter passed
+✓ test_channel_limit_getter_setter passed
+✓ test_channel_setters_chaining passed
+
+--- Mode Tests ---
+✓ test_channel_add_mode passed
+✓ test_channel_remove_mode passed
+✓ test_channel_multiple_modes passed
+✓ test_channel_invite_only_mode passed
+✓ test_channel_topic_restricted_mode passed
+✓ test_channel_key_mode passed
+✓ test_channel_limit_mode passed
+✓ test_channel_duplicate_mode passed
+✓ test_channel_remove_nonexistent_mode passed
+
+--- Member Tests ---
+✓ test_channel_add_member passed
+✓ test_channel_remove_member passed
+✓ test_channel_multiple_members passed
+✓ test_channel_duplicate_member passed
+✓ test_channel_remove_nonexistent_member passed
+
+--- Operator Tests ---
+✓ test_channel_add_operator passed
+✓ test_channel_remove_operator passed
+✓ test_channel_multiple_operators passed
+✓ test_channel_duplicate_operator passed
+✓ test_channel_member_and_operator passed
+
+--- Invited Tests ---
+✓ test_channel_add_invited passed
+✓ test_channel_remove_invited passed
+✓ test_channel_multiple_invited passed
+✓ test_channel_duplicate_invited passed
+✓ test_channel_invited_becomes_member passed
+
+--- Topic Tests ---
+✓ test_channel_topic_update passed
+✓ test_channel_topic_restricted_workflow passed
+✓ test_channel_empty_topic passed
+✓ test_channel_long_topic passed
+
+--- Key and Limit Tests ---
+✓ test_channel_key_workflow passed
+✓ test_channel_limit_workflow passed
+✓ test_channel_zero_limit passed
+✓ test_channel_large_limit passed
+
+--- Edge Case Tests ---
+✓ test_channel_empty_name passed
+✓ test_channel_special_characters_in_name passed
+✓ test_channel_empty_key passed
+✓ test_channel_special_characters_in_key passed
+
+--- Complex Scenario Tests ---
+✓ test_channel_full_lifecycle passed
+✓ test_channel_private_with_key_and_limit passed
+✓ test_channel_mode_changes passed
+✓ test_channel_user_lifecycle_in_channel passed
+========== ALL CHANNEL TESTS PASSED ==========
+
+========== SERVER TESTS ==========
+
+--- Constructor Tests ---
+✓ test_server_default_constructor passed
+
+--- Getter/Setter Tests ---
+✓ test_server_host_getter_setter passed
+✓ test_server_port_getter_setter passed
+✓ test_server_pass_getter_setter passed
+✓ test_server_name_getter_setter passed
+✓ test_server_setters_chaining passed
+
+--- Client CRUD Tests ---
+✓ test_server_add_client passed
+✓ test_server_add_multiple_clients passed
+✓ test_server_add_duplicate_client_fd passed
+✓ test_server_get_client passed
+✓ test_server_get_client_const passed
+✓ test_server_get_nonexistent_client passed
