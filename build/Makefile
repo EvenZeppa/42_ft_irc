@@ -60,7 +60,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc
+CMAKE_BINARY_DIR = /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/CMakeFiles /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/CMakeFiles /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

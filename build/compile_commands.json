@@ -1,0 +1,74 @@
+[
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/Channel.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Channel.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Channel.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/Channel.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/Client.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Client.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Client.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/Client.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/JoinCommand.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/JoinCommand.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/JoinCommand.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/JoinCommand.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/Server.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Server.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Server.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/Server.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/CommandHelpers.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandHelpers.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandHelpers.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/CommandHelpers.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/CommandManager.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandManager.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandManager.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/CommandManager.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_auth.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_auth.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_auth.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/cmd_auth.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_channel.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_channel.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_channel.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/cmd_channel.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_mode.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_mode.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_mode.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/cmd_mode.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_ops.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_ops.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_ops.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/cmd_ops.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_privmsg.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_privmsg.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_privmsg.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/commands/cmd_privmsg.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
+  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/main.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/main.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/main.cpp",
+  "output": "CMakeFiles/ircserv.dir/src/main.cpp.o"
+}
+]
