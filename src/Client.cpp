@@ -84,6 +84,7 @@ bool Client::hasMode(char mode) const {
 std::string& Client::readBuffer() { return _readBuffer; }
 const std::string& Client::readBuffer() const { return _readBuffer; }
 void Client::appendToReadBuffer(const std::string& data) { _readBuffer += data; }
+void Client::subToReadBuffer(size_t n) { _readBuffer = _readBuffer.substr(n, _readBuffer.size() - n); }
 void Client::clearReadBuffer() { _readBuffer.clear(); }
 
 std::string& Client::writeBuffer() { return _writeBuffer; }
