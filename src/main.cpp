@@ -86,16 +86,16 @@ void initGrammar(Grammar& grammar) {
 // }
 
 int main() {
-	std::cout << "IRC Project Initialized" << std::endl;
 	
 	Server server;
 	server
-		.host("192.168.1.26")
-		.port("6667")
-		.name("MyServer")
-		.pass("1234");
-
+	.host("192.168.1.26")
+	.port("6667")
+	.name("MyServer")
+	.pass("1234");
+	
 	server.init();
+	std::cout << "IRC Project Initialized" << std::endl;
 	server.run();
 	server.close();
 	
