@@ -11,7 +11,24 @@ project(ircserv
 # set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Flags (équivalent -Wall -Wextra -Werror)
-add_compile_options(-Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate)
+include(CheckCXXCompilerFlag)
+
+set(CXX_WARN_FLAGS
+    -Wall
+    -Wextra
+    -Wno-unused-private-field
+    -Wno-non-virtual-dtor
+    -Wno-terminate
+)
+
+foreach(flag IN LISTS CXX_WARN_FLAGS)
+    string(MAKE_C_IDENTIFIER "${flag}" flag_id)
+    set(flag_var "HAS_${flag_id}")
+    check_cxx_compiler_flag("${flag}" "${flag_var}")
+    if(${flag_var})
+        add_compile_options($<$<COMPILE_LANGUAGE:CXX>:${flag}>)
+    endif()
+endforeach()
 
 # Récupère tous les .cpp
 file(GLOB_RECURSE SRC_FILES
@@ -21,8 +38,19 @@ file(GLOB_RECURSE SRC_FILES
 # Exécutable
 add_executable(ircserv ${SRC_FILES})
 
+set(BNFPARSER_BUILD_EXAMPLES OFF CACHE BOOL "Disable BNFParser examples" FORCE)
+add_subdirectory(third_party/BNFParserLib EXCLUDE_FROM_ALL)
+target_link_libraries(ircserv PRIVATE bnf)
+
+if(APPLE)
+    add_subdirectory(third_party/epoll-shim)
+    target_link_libraries(ircserv PRIVATE epoll-shim)
+    target_compile_definitions(ircserv PRIVATE EPOLL_SHIM_DISABLE_WRAPPER_MACROS)
+endif()
+
 # Includes PUBLICS
 target_include_directories(ircserv
     PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/third_party/BNFParserLib/include
 )

@@ -1,74 +1,332 @@
 [
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/Channel.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Channel.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/Channel.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Channel.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Channel.cpp",
   "output": "CMakeFiles/ircserv.dir/src/Channel.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/Client.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Client.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/Client.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Client.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Client.cpp",
   "output": "CMakeFiles/ircserv.dir/src/Client.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/JoinCommand.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/JoinCommand.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/JoinCommand.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/JoinCommand.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/JoinCommand.cpp",
   "output": "CMakeFiles/ircserv.dir/src/JoinCommand.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/Server.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Server.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/Server.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Server.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/Server.cpp",
   "output": "CMakeFiles/ircserv.dir/src/Server.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/CommandHelpers.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandHelpers.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/CommandHelpers.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandHelpers.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandHelpers.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/CommandHelpers.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/CommandManager.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandManager.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/CommandManager.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandManager.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/CommandManager.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/CommandManager.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_auth.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_auth.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/cmd_auth.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_auth.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_auth.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/cmd_auth.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_channel.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_channel.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/cmd_channel.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_channel.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_channel.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/cmd_channel.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_mode.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_mode.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/cmd_mode.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_mode.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_mode.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/cmd_mode.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_ops.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_ops.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/cmd_ops.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_ops.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_ops.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/cmd_ops.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/commands/cmd_privmsg.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_privmsg.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/commands/cmd_privmsg.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_privmsg.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/commands/cmd_privmsg.cpp",
   "output": "CMakeFiles/ircserv.dir/src/commands/cmd_privmsg.cpp.o"
 },
 {
   "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build",
-  "command": "/usr/bin/c++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include  -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -Wno-terminate -o CMakeFiles/ircserv.dir/src/main.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/main.cpp",
+  "command": "/usr/bin/clang++ -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/ircserv.dir/src/main.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/main.cpp",
   "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/src/main.cpp",
   "output": "CMakeFiles/ircserv.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/AST.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/AST.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/AST.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/AST.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/Arena.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/Arena.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/Arena.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/Arena.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/BNFParser.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/BNFParser.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/BNFParser.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/BNFParser.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/BNFTokenizer.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/BNFTokenizer.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/BNFTokenizer.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/BNFTokenizer.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/DataExtractor.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/DataExtractor.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/DataExtractor.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/DataExtractor.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/Expression.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/Expression.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/Expression.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/Expression.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/ExpressionInterner.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/ExpressionInterner.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/ExpressionInterner.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/ExpressionInterner.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/ExtractedData.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/ExtractedData.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/ExtractedData.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/ExtractedData.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/bnf.dir/src/Grammar.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/Grammar.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/src/Grammar.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/bnf.dir/src/Grammar.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_arena_stress_runner.dir/tests/test_arena_stress.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_arena_stress.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_arena_stress.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_arena_stress_runner.dir/tests/test_arena_stress.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_ast_runner.dir/tests/test_ast.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_ast.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_ast.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_ast_runner.dir/tests/test_ast.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_expression_runner.dir/tests/test_expression.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_expression.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_expression.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_expression_runner.dir/tests/test_expression.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_extractor_runner.dir/tests/test_extractor.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_extractor.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_extractor.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_extractor_runner.dir/tests/test_extractor.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_first_memo_runner.dir/tests/test_first_memo.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_first_memo.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_first_memo.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_first_memo_runner.dir/tests/test_first_memo.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_grammar_runner.dir/tests/test_grammar.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_grammar.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_grammar.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_grammar_runner.dir/tests/test_grammar.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_integration_charclass_runner.dir/tests/test_integration_charclass.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_integration_charclass.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_integration_charclass.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_integration_charclass_runner.dir/tests/test_integration_charclass.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_interning_runner.dir/tests/test_interning.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_interning.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_interning.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_interning_runner.dir/tests/test_interning.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_parser_runner.dir/tests/test_parser.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_parser.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_parser.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_parser_runner.dir/tests/test_parser.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib",
+  "command": "/usr/bin/clang++  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/include  -Wall -Wextra -Werror -g -g -std=c++98 -arch arm64 -Wall -Wextra -Wno-unused-private-field -Wno-non-virtual-dtor -o CMakeFiles/test_tokenizer_runner.dir/tests/test_tokenizer.cpp.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_tokenizer.cpp",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/BNFParserLib/tests/test_tokenizer.cpp",
+  "output": "third_party/BNFParserLib/CMakeFiles/test_tokenizer_runner.dir/tests/test_tokenizer.cpp.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/microatf/src",
+  "command": "/usr/bin/clang -D_GNU_SOURCE=1 -Dmicroatf_c_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/microatf/src -g -std=gnu11 -arch arm64 -fPIC -o CMakeFiles/microatf-c.dir/atf-c.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/microatf/src/atf-c.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/microatf/src/atf-c.c",
+  "output": "third_party/epoll-shim/external/microatf/src/CMakeFiles/microatf-c.dir/atf-c.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/microatf/src",
+  "command": "/usr/bin/clang -D_GNU_SOURCE=1  -g -std=gnu11 -arch arm64 -o CMakeFiles/microatf-translate-signal.dir/translate-signal.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/microatf/src/translate-signal.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/microatf/src/translate-signal.c",
+  "output": "third_party/epoll-shim/external/microatf/src/CMakeFiles/microatf-translate-signal.dir/translate-signal.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/wrap.dir/wrap.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/wrap.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/wrap.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/wrap.dir/wrap.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_sem.dir/compat_sem.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_sem.dir/compat_sem.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_SEM -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/rwlock.dir/rwlock.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/rwlock.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/rwlock.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/rwlock.dir/rwlock.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_kqueue1.dir/compat_kqueue1.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_kqueue1.dir/compat_kqueue1.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_sigops.dir/compat_sigops.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_sigops.dir/compat_sigops.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_itimerspec.dir/compat_itimerspec.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_itimerspec.dir/compat_itimerspec.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_ppoll.dir/compat_ppoll.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_ppoll.dir/compat_ppoll.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/epoll_shim_ctx.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epoll_shim_ctx.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epoll_shim_ctx.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/epoll_shim_ctx.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/epoll.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epoll.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epoll.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/epoll.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/epollfd_ctx.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epollfd_ctx.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epollfd_ctx.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/epollfd_ctx.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/kqueue_event.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/kqueue_event.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/kqueue_event.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/kqueue_event.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/signalfd.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/signalfd.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/signalfd.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/signalfd.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/signalfd_ctx.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/signalfd_ctx.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/signalfd_ctx.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/signalfd_ctx.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/timespec_util.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/timespec_util.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/timespec_util.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/timespec_util.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/eventfd.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/eventfd.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/eventfd.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/eventfd.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/eventfd_ctx.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/eventfd_ctx.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/eventfd_ctx.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/eventfd_ctx.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/timerfd.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/timerfd.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/timerfd.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/timerfd.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DCOMPAT_ENABLE_ITIMERSPEC -DCOMPAT_ENABLE_KQUEUE1 -DCOMPAT_ENABLE_PPOLL -DCOMPAT_ENABLE_SEM -DCOMPAT_ENABLE_SIGOPS -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -D__uintptr_t=uintptr_t -Depoll_shim_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/queue-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/external/tree-macros/include -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_kqueue1.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_ppoll.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_itimerspec.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sigops.h -include /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_sem.h -o CMakeFiles/epoll-shim.dir/timerfd_ctx.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/timerfd_ctx.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/timerfd_ctx.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim.dir/timerfd_ctx.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_pipe2.dir/compat_pipe2.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_pipe2.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_pipe2.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_pipe2.dir/compat_pipe2.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_socket.dir/compat_socket.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_socket.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_socket.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_socket.dir/compat_socket.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang  -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/compat_socketpair.dir/compat_socketpair.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_socketpair.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/compat_socketpair.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/compat_socketpair.dir/compat_socketpair.c.o"
+},
+{
+  "directory": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src",
+  "command": "/usr/bin/clang -DEPOLL_SHIM_DISABLE_WRAPPER_MACROS -Depoll_shim_interpose_EXPORTS -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src -I/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/install-include -g -std=gnu11 -arch arm64 -fPIC -fvisibility=hidden -o CMakeFiles/epoll-shim-interpose.dir/epoll_shim_interpose.c.o -c /Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epoll_shim_interpose.c",
+  "file": "/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/third_party/epoll-shim/src/epoll_shim_interpose.c",
+  "output": "third_party/epoll-shim/src/CMakeFiles/epoll-shim-interpose.dir/epoll_shim_interpose.c.o"
 }
 ]

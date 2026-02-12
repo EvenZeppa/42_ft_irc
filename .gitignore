@@ -1,0 +1,39 @@
+# Build outputs
+/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# CMake presets and user configs
+CMakeUserPresets.json
+CMakePresets.json
+
+# Binaries
+/ircserv
+/test_runner
+
+# Test outputs
+/test_results.txt
+/test_output.txt
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Coverage
+*.gcda
+*.gcno
+*.gcov
+
+# Logs
+*.log

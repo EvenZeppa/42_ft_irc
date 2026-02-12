@@ -1,7 +1,15 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/cmake_install.cmake"
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/BNFParserLib/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/microatf/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/microatf/src/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/queue-macros/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/external/tree-macros/cmake_install.cmake",
+		"/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/third_party/epoll-shim/src/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

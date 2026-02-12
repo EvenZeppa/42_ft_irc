@@ -271,6 +271,8 @@ ircserv: CMakeFiles/ircserv.dir/src/commands/cmd_ops.cpp.o
 ircserv: CMakeFiles/ircserv.dir/src/commands/cmd_privmsg.cpp.o
 ircserv: CMakeFiles/ircserv.dir/src/main.cpp.o
 ircserv: CMakeFiles/ircserv.dir/build.make
+ircserv: third_party/BNFParserLib/libbnf.a
+ircserv: third_party/epoll-shim/src/libepoll-shim.0.dylib
 ircserv: CMakeFiles/ircserv.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/dev/Documents/Workspace/CPP/ezeppa/42_ft_irc/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable ircserv"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ircserv.dir/link.txt --verbose=$(VERBOSE)
