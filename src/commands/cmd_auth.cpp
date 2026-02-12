@@ -18,6 +18,7 @@ void CommandManager::cmdUser(Server& server, Client& client, const std::vector<s
 
 void CommandManager::cmdCap(Server& server, Client& client, const std::vector<std::string>& args) {
     // Implementation of CAP command
+	std::cout << "testttt" << std::endl;
 }
 
 void CommandManager::cmdQuit(Server& server, Client& client, const std::vector<std::string>& args) {
