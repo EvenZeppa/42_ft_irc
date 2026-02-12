@@ -74,6 +74,7 @@ public:
 	std::string& readBuffer();
 	const std::string& readBuffer() const;
 	void appendToReadBuffer(const std::string& data);
+	void subToReadBuffer(size_t n);
 	void clearReadBuffer();
 
 	std::string& writeBuffer();

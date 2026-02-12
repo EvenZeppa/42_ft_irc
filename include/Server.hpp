@@ -7,6 +7,12 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+#include "CommandManager.hpp"
+
+#include "Grammar.hpp"
+#include "BNFParser.hpp"
+#include "DataExtractor.hpp"
+
 class Server {
 private:
 	// Connection
@@ -23,6 +29,8 @@ private:
 
 	int _socketfd;
 	int _epfd;
+
+	Grammar _grammar;
 public:
 	Server();
 	Server(const Server& other);

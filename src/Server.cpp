@@ -155,6 +155,36 @@ std::map<std::string, Channel*>& Server::channels() const {
 	return const_cast<std::map<std::string, Channel*>&>(_channels);
 }
 
+void initGrammar(Grammar& grammar) {
+	grammar.addRule("<letter> ::= ( 'a' ... 'z' 'A' ... 'Z' )");
+	grammar.addRule("<number> ::= ( '0' ... '9' )");
+	grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
+
+	grammar.addRule("<nospace> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '} | '~'");
+	grammar.addRule("<safechar> ::= ' ' | '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
+	grammar.addRule("<nospecial> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
+	grammar.addRule("<nonwhite> ::= ( ^ 0x20 0x0 0xD 0xA )");
+
+	grammar.addRule("<SPACE> ::= ' ' { ' ' }");
+	grammar.addRule("<crlf> ::= '\r' '\n'");
+
+	grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
+	grammar.addRule("<trailing> ::= { <safechar> }");
+
+	grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
+	grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
+
+	grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
+	grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
+
+	grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
+	grammar.addRule("<hostname-end> ::= <letter> | <number>");
+	grammar.addRule("<servername> ::= <letter> { <hostname-char> } <hostname-end>");
+
+	grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]");
+	grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
+}
+
 int Server::init() {
 	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketfd == -1) {
@@ -218,6 +248,9 @@ int Server::init() {
 		std::cerr << "Error: Epoll ctl for listen server" << std::endl;
 		return -1;
 	}
+
+	initGrammar(_grammar);
+
 	return 0;
 }
 
@@ -318,6 +351,36 @@ void Server::handleClientRead(Client& client) {
 		buffer[bytesRead] = '\0';
 		client.appendToReadBuffer(std::string(buffer));
 		// Parse commands
+
+		BNFParser parser(_grammar);
+
+		size_t consumed = 0;
+		ASTNode* ast = parser.parse("<message>", client.readBuffer(), consumed);
+		if (ast) {
+			DataExtractor extractor;
+			ExtractedData data = extractor.extract(ast);
+
+			if (data.has("<command>")) {
+				std::string command;
+				std::vector<std::string> middles;
+				std::string trailing;
+
+				command = data.first("<command>");
+				if (data.has("<middle>"))
+					middles = data.all("<middle>");
+				if (data.has("<trailing>")) {
+					trailing = data.first("<trailing>");
+					middles.push_back(trailing);
+				}
+
+				CommandManager cm;
+
+				cm.executeCommand(*this, client, command, middles);
+
+				client.subToReadBuffer(consumed);
+			}
+		}
+
 		std::cout << client.readBuffer() << std::endl;
 	} else if (bytesRead == 0) {
 		std::cout << "Client fd " << client.fd() << " disconnected." << std::endl;
