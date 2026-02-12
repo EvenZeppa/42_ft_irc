@@ -25,6 +25,9 @@ CMakePresets.json
 .AppleDouble
 .LSOverride
 
+# pdf 
+*.pdf
+
 # Editor/IDE
 .vscode/
 .idea/

@@ -5,12 +5,13 @@ project(ircserv
     LANGUAGES CXX
 )
 
-enable_testing()
+# Limit dependency scanning to the project to reduce rebuild churn.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY ON CACHE BOOL "" FORCE)
 
-# Norme C++
-# set(CMAKE_CXX_STANDARD 98)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# set(CMAKE_CXX_EXTENSIONS OFF)
+# Norme C++ (C++98 obligatoire)
+set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Flags (équivalent -Wall -Wextra -Werror)
 include(CheckCXXCompilerFlag)
@@ -18,9 +19,7 @@ include(CheckCXXCompilerFlag)
 set(CXX_WARN_FLAGS
     -Wall
     -Wextra
-    -Wno-unused-private-field
-    -Wno-non-virtual-dtor
-    -Wno-terminate
+    # -Werror
 )
 
 foreach(flag IN LISTS CXX_WARN_FLAGS)
@@ -66,7 +65,7 @@ file(GLOB_RECURSE TEST_FILES
 set(TEST_SRC_FILES ${SRC_FILES})
 list(FILTER TEST_SRC_FILES EXCLUDE REGEX "src/main\\.cpp$")
 
-add_executable(test_runner ${TEST_FILES} ${TEST_SRC_FILES})
+add_executable(test_runner EXCLUDE_FROM_ALL ${TEST_FILES} ${TEST_SRC_FILES})
 target_link_libraries(test_runner PRIVATE bnf)
 if(APPLE)
     target_link_libraries(test_runner PRIVATE epoll-shim)
@@ -79,16 +78,20 @@ target_include_directories(test_runner
     ${PROJECT_SOURCE_DIR}/third_party/BNFParserLib/include
 )
 
-add_test(NAME irc_tests COMMAND test_runner)
+# Build tests only when explicitly requested.
+add_custom_target(test DEPENDS test_runner)
 
-add_custom_target(run_tests
-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS test_runner
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+# Remove executables even for in-source builds.
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+    ${CMAKE_BINARY_DIR}/ircserv
+    ${CMAKE_BINARY_DIR}/test_runner
+    ${PROJECT_SOURCE_DIR}/ircserv
+    ${PROJECT_SOURCE_DIR}/test_runner
 )
 
 # Remove CMake-generated build artifacts (like make fclean)
 add_custom_target(fclean
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
     COMMAND ${CMAKE_COMMAND} -E rm -rf
         ${CMAKE_BINARY_DIR}/CMakeFiles
         ${CMAKE_BINARY_DIR}/CMakeCache.txt
