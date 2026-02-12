@@ -94,9 +94,11 @@ int main() {
 	.name("MyServer")
 	.pass("1234");
 	
+	std::cout << "IRC Project Initialisation" << std::endl;
 	server.init();
-	std::cout << "IRC Project Initialized" << std::endl;
+    std::cout << "IRC Project Running" << std::endl;
 	server.run();
+    std::cout << "IRC Project Stopped" << std::endl;
 	server.close();
 	
 	return 0;
