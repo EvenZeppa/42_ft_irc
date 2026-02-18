@@ -299,6 +299,7 @@ int Server::handle_event(struct epoll_event ev) {
 
 			Client* newClient = new Client(cfd);
 			newClient->epollServerFd(_epfd);
+			newClient->hostname(_host);
 			if (!addClient(newClient)) {
 				delete newClient;
 				return -1;
@@ -334,11 +335,13 @@ int Server::handle_event(struct epoll_event ev) {
 void Server::handleClientWrite(Client& client) {
 	std::string& writeBuffer = client.writeBuffer();
 	if (!writeBuffer.empty()) {
+		std::cout << "[WRITE] fd=" << client.fd() << " send: " << writeBuffer;
 		ssize_t bytesSent = send(client.fd(), writeBuffer.c_str(), writeBuffer.size(), 0);
 		if (bytesSent > 0) {
+			std::cout << "[WRITE] Sent " << bytesSent << " bytes" << std::endl;
 			writeBuffer.erase(0, bytesSent);
 		} else if (bytesSent == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-			std::cerr << "Error: Sending data to client fd " << client.fd() << std::endl;
+			std::cerr << "[ERROR] Sending data to client fd " << client.fd() << std::endl;
 			client.fd(-1);
 		}
 	}
@@ -350,43 +353,77 @@ void Server::handleClientRead(Client& client) {
 	if (bytesRead > 0) {
 		buffer[bytesRead] = '\0';
 		client.appendToReadBuffer(std::string(buffer));
-		// Parse commands
+		
+		std::cout << "[READ] fd=" << client.fd() << " recv: " << buffer;
 
-		BNFParser parser(_grammar);
-
-		size_t consumed = 0;
-		ASTNode* ast = parser.parse("<message>", client.readBuffer(), consumed);
-		if (ast) {
-			DataExtractor extractor;
-			ExtractedData data = extractor.extract(ast);
-
-			if (data.has("<command>")) {
-				std::string command;
-				std::vector<std::string> middles;
-				std::string trailing;
-
-				command = data.first("<command>");
-				if (data.has("<middle>"))
-					middles = data.all("<middle>");
-				if (data.has("<trailing>")) {
-					trailing = data.first("<trailing>");
-					middles.push_back(trailing);
-				}
-
-				CommandManager cm;
-
-				cm.executeCommand(*this, client, command, middles);
-
-				client.subToReadBuffer(consumed);
+		// Normalize line endings: convert LF to CRLF if not already present
+		std::string& readBuf = client.readBuffer();
+		for (size_t i = 0; i < readBuf.length(); i++) {
+			if (readBuf[i] == '\n' && (i == 0 || readBuf[i-1] != '\r')) {
+				readBuf.insert(i, 1, '\r');
+				i++; // Skip the \n we just processed
 			}
 		}
 
-		std::cout << client.readBuffer() << std::endl;
+		// Parse all complete commands in buffer
+		while (!client.readBuffer().empty()) {
+			BNFParser parser(_grammar);
+
+			size_t consumed = 0;
+			ASTNode* ast = parser.parse("<message>", client.readBuffer(), consumed);
+			if (ast) {
+				DataExtractor extractor;
+				ExtractedData data = extractor.extract(ast);
+
+				if (data.has("<command>")) {
+					std::string command;
+					std::vector<std::string> middles;
+					std::string trailing;
+
+					command = data.first("<command>");
+					if (data.has("<middle>"))
+						middles = data.all("<middle>");
+					if (data.has("<trailing>")) {
+						trailing = data.first("<trailing>");
+						middles.push_back(trailing);
+					}
+
+					std::cout << "[PARSE] Command: " << command << " Args: ";
+
+					std::vector<std::string>::iterator it;
+					for (it = middles.begin(); it != middles.end(); ++it) {
+						std::cout << "[" << *it << "] ";
+					}
+					std::cout << std::endl;
+
+					CommandManager cm;
+					cm.executeCommand(*this, client, command, middles);
+
+					client.subToReadBuffer(consumed);
+					
+					delete ast;
+				} else {
+					std::cout << "[PARSE] Failed to parse message (no command)" << std::endl;
+					delete ast;
+					break;
+				}
+			} else {
+				// No complete message yet, wait for more data
+				if (!client.readBuffer().empty()) {
+					std::cout << "[PARSE] Incomplete message in buffer, waiting for more data" << std::endl;
+				}
+				break;
+			}
+		}
+
+		if (!client.readBuffer().empty()) {
+			std::cout << "[BUFFER] Remaining: " << client.readBuffer() << std::endl;
+		}
 	} else if (bytesRead == 0) {
-		std::cout << "Client fd " << client.fd() << " disconnected." << std::endl;
+		std::cout << "[DISCONNECT] Client fd " << client.fd() << " disconnected." << std::endl;
 		client.fd(-1);
 	} else if (bytesRead == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-		std::cerr << "Error: Receiving data from client fd " << client.fd() << std::endl;
+		std::cerr << "[ERROR] Receiving data from client fd " << client.fd() << std::endl;
 		client.fd(-1);
 	}
 }

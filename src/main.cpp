@@ -88,7 +88,7 @@ int main() {
 	
 	Server server;
 	server
-	.host("192.168.1.26")
+	.host("127.0.0.1")
 	.port("6667")
 	.name("MyServer")
 	.pass("1234");

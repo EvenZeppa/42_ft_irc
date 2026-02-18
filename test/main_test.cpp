@@ -5,6 +5,7 @@ int run_client_tests();
 int run_channel_tests();
 int run_server_tests();
 int run_integration_tests();
+int run_commands_tests();
 
 int main() {
 	std::cout << "\n╔════════════════════════════════════════╗" << std::endl;
@@ -23,6 +24,13 @@ int main() {
 		if (run_client_tests() != 0) failed++;
 		if (run_channel_tests() != 0) failed++;
 		if (run_server_tests() != 0) failed++;
+		
+		// Run command tests
+		std::cout << "\n═══════════════════════════════════════" << std::endl;
+		std::cout << "         COMMAND TESTS" << std::endl;
+		std::cout << "═══════════════════════════════════════" << std::endl;
+		
+		if (run_commands_tests() != 0) failed++;
 		
 		// Run integration tests
 		std::cout << "\n═══════════════════════════════════════" << std::endl;
