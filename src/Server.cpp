@@ -8,6 +8,9 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <cerrno>
+#include <sstream>
+
+#include "../include/Logger.hpp"
 
 Server::Server() :
 	_host("127.0.0.1"),
@@ -256,7 +259,7 @@ void initGrammar(Grammar& grammar) {
 int Server::init() {
 	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketfd == -1) {
-		std::cerr << "Error: Socket init" << std::endl;
+		Logger::log(Logger::ERROR, -1, "Socket init failed");
 		return -1;
 	}
 
@@ -268,7 +271,7 @@ int Server::init() {
 	sin.ai_flags = AI_PASSIVE;
 
 	if (getaddrinfo(NULL, _port.c_str(), &sin, &res)) {
-		std::cerr << "getaddrinfo error" << std::endl;
+		Logger::log(Logger::ERROR, -1, "getaddrinfo failed");
 		return -1;
 	}
 
@@ -292,13 +295,13 @@ int Server::init() {
 	freeaddrinfo(res);
 
 	if (listen(_socketfd, 5) == -1) {
-		std::cerr << "Error: Socket listen" << std::endl;
+		Logger::log(Logger::ERROR, -1, "Socket listen failed");
 		return -1;
 	}
 
 	_epfd = epoll_create1(0);
 	if (_epfd == -1) {
-		std::cerr << "Error: Epoll create" << std::endl;
+		Logger::log(Logger::ERROR, -1, "epoll_create1 failed");
 		return -1;
 	}
 
@@ -307,13 +310,13 @@ int Server::init() {
 	ev.data.fd = STDIN_FILENO;
 
 	if (epoll_ctl(_epfd, EPOLL_CTL_ADD, STDIN_FILENO, &ev) == -1) {
-		std::cerr << "Error: Epoll ctl for quit" << std::endl;
+		Logger::log(Logger::ERROR, -1, "epoll_ctl add STDIN failed");
 		return -1;
 	}
 
 	ev.data.fd = _socketfd;
 	if (epoll_ctl(_epfd, EPOLL_CTL_ADD, _socketfd, &ev)) {
-		std::cerr << "Error: Epoll ctl for listen server" << std::endl;
+		Logger::log(Logger::ERROR, -1, "epoll_ctl add server socket failed");
 		return -1;
 	}
 
@@ -328,7 +331,7 @@ void Server::run() {
 		int num_events = epoll_wait(_epfd, rev, 1028, -1);
 		if (num_events < 0) {
 			if (_running) {
-				std::cerr << "Error: epoll_wait failed" << std::endl;
+				Logger::log(Logger::ERROR, -1, "epoll_wait failed");
 			}
 			break;
 		}
@@ -400,13 +403,15 @@ int Server::handle_event(struct epoll_event ev) {
 void Server::handleClientWrite(Client& client) {
 	std::string& writeBuffer = client.writeBuffer();
 	if (!writeBuffer.empty()) {
-		std::cout << "[WRITE] fd=" << client.fd() << " send: " << writeBuffer;
+		Logger::log(Logger::OUT, client.fd(), writeBuffer, client.nickname());
 		ssize_t bytesSent = send(client.fd(), writeBuffer.c_str(), writeBuffer.size(), 0);
 		if (bytesSent > 0) {
-			std::cout << "[WRITE] Sent " << bytesSent << " bytes" << std::endl;
+			std::ostringstream oss;
+			oss << "Sent " << bytesSent << " bytes";
+			Logger::log(Logger::INFO, client.fd(), oss.str(), client.nickname());
 			writeBuffer.erase(0, bytesSent);
 		} else if (bytesSent == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-			std::cerr << "[ERROR] Sending data to client fd " << client.fd() << std::endl;
+			Logger::log(Logger::ERROR, client.fd(), "send() failed", client.nickname());
 			client.fd(-1);
 		}
 	}
@@ -418,8 +423,7 @@ void Server::handleClientRead(Client& client) {
 	if (bytesRead > 0) {
 		buffer[bytesRead] = '\0';
 		client.appendToReadBuffer(std::string(buffer));
-		
-		std::cout << "[READ] fd=" << client.fd() << " recv: " << buffer;
+		Logger::log(Logger::IN, client.fd(), std::string(buffer), client.nickname());
 
 		// Normalize line endings: convert LF to CRLF if not already present
 		std::string& readBuf = client.readBuffer();
@@ -453,13 +457,14 @@ void Server::handleClientRead(Client& client) {
 						middles.push_back(trailing);
 					}
 
-					std::cout << "[PARSE] Command: " << command << " Args: ";
-
-					std::vector<std::string>::iterator it;
-					for (it = middles.begin(); it != middles.end(); ++it) {
-						std::cout << "[" << *it << "] ";
+					std::string parseMsg = "Command: " + command;
+					if (!middles.empty()) {
+						parseMsg += " Args:";
+						for (std::vector<std::string>::iterator it = middles.begin(); it != middles.end(); ++it) {
+							parseMsg += " [" + *it + "]";
+						}
 					}
-					std::cout << std::endl;
+					Logger::log(Logger::INFO, client.fd(), parseMsg, client.nickname());
 
 					CommandManager cm;
 					cm.executeCommand(*this, client, command, middles);
@@ -468,27 +473,27 @@ void Server::handleClientRead(Client& client) {
 					
 					delete ast;
 				} else {
-					std::cout << "[PARSE] Failed to parse message (no command)" << std::endl;
+					Logger::log(Logger::ERROR, client.fd(), "Parse failed (no command)", client.nickname());
 					delete ast;
 					break;
 				}
 			} else {
 				// No complete message yet, wait for more data
 				if (!client.readBuffer().empty()) {
-					std::cout << "[PARSE] Incomplete message in buffer, waiting for more data" << std::endl;
+					Logger::log(Logger::INFO, client.fd(), "Incomplete message in buffer, waiting for more data", client.nickname());
 				}
 				break;
 			}
 		}
 
 		if (!client.readBuffer().empty()) {
-			std::cout << "[BUFFER] Remaining: " << client.readBuffer() << std::endl;
+			Logger::log(Logger::INFO, client.fd(), "Buffer remaining: " + client.readBuffer(), client.nickname());
 		}
 	} else if (bytesRead == 0) {
-		std::cout << "[DISCONNECT] Client fd " << client.fd() << " disconnected." << std::endl;
+		Logger::log(Logger::INFO, client.fd(), "Client disconnected", client.nickname());
 		client.fd(-1);
 	} else if (bytesRead == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-		std::cerr << "[ERROR] Receiving data from client fd " << client.fd() << std::endl;
+		Logger::log(Logger::ERROR, client.fd(), "recv() failed", client.nickname());
 		client.fd(-1);
 	}
 }
