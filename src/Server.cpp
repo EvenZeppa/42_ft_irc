@@ -13,13 +13,21 @@ Server::Server() :
 	_host("127.0.0.1"),
 	_port("6667"),
 	_pass(""),
-	_name("emptyName") {}
+	_name("emptyName"),
+	_socketfd(-1),
+	_epfd(-1),
+	_running(true),
+	_isClosed(false) {}
 
 Server::Server(const Server& other) :
 	_host(other._host),
 	_port(other._port),
 	_pass(other._pass),
-	_name(other._name) {}
+	_name(other._name),
+	_socketfd(-1),
+	_epfd(-1),
+	_running(true),
+	_isClosed(false) {}
 
 Server& Server::operator=(const Server& other) {
 	_host = other._host;
@@ -30,6 +38,16 @@ Server& Server::operator=(const Server& other) {
 }
 
 Server::~Server() {
+	cleanupResources();
+}
+
+void Server::cleanupResources() {
+	if (_isClosed) {
+		return;
+	}
+	_isClosed = true;
+	_running = false;
+
 	std::map<int, Client*>::iterator it;
 	for (it = _clients.begin(); it != _clients.end(); ++it) {
 		delete it->second;
@@ -44,9 +62,11 @@ Server::~Server() {
 
 	if (_socketfd != -1) {
 		::close(_socketfd);
+		_socketfd = -1;
 	}
 	if (_epfd != -1) {
 		::close(_epfd);
+		_epfd = -1;
 	}
 }
 
@@ -155,34 +175,82 @@ std::map<std::string, Channel*>& Server::channels() const {
 	return const_cast<std::map<std::string, Channel*>&>(_channels);
 }
 
+// void initGrammar(Grammar& grammar) {
+// 	grammar.addRule("<letter> ::= ( 'a' ... 'z' 'A' ... 'Z' )");
+// 	grammar.addRule("<number> ::= ( '0' ... '9' )");
+// 	grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
+
+// 	grammar.addRule("<nospace> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '} | '~'");
+// 	grammar.addRule("<safechar> ::= ' ' | '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
+// 	grammar.addRule("<nospecial> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
+// 	grammar.addRule("<nonwhite> ::= ( ^ 0x20 0x0 0xD 0xA )");
+
+// 	grammar.addRule("<SPACE> ::= ' ' { ' ' }");
+// 	grammar.addRule("<crlf> ::= '\r' '\n'");
+
+// 	grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
+// 	grammar.addRule("<trailing> ::= { <safechar> }");
+
+// 	grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
+// 	grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
+
+// 	grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
+// 	grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
+
+// 	grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
+// 	grammar.addRule("<hostname-end> ::= <letter> | <number>");
+// 	grammar.addRule("<servername> ::= <letter> { <hostname-char> } <hostname-end>");
+
+// 	grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]");
+// 	grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
+// }
+
 void initGrammar(Grammar& grammar) {
-	grammar.addRule("<letter> ::= ( 'a' ... 'z' 'A' ... 'Z' )");
-	grammar.addRule("<number> ::= ( '0' ... '9' )");
-	grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
+    // Définitions de base
+    grammar.addRule("<letter> ::= 'a'...'z' | 'A'...'Z'");
+    grammar.addRule("<number> ::= '0'...'9'");
+    grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
+    
+    // Ajout des accents (Extended ASCII / ISO-8859-1)
+    // 0xA0 à 0xFF couvre la majorité des caractères accentués et spéciaux latins
+    grammar.addRule("<accented> ::= 0xA0...0xFF");
 
-	grammar.addRule("<nospace> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '} | '~'");
-	grammar.addRule("<safechar> ::= ' ' | '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
-	grammar.addRule("<nospecial> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
-	grammar.addRule("<nonwhite> ::= ( ^ 0x20 0x0 0xD 0xA )");
+    // Nettoyage des règles complexes avec les plages
+    // <safechar> : Tous les caractères imprimables de l'espace (32) au tilde (126) + accents
+    grammar.addRule("<safechar> ::= ' '...'~' | <accented>");
+    
+    // <nospace> : Comme safechar mais sans l'espace ('!' est le caractère 33)
+    grammar.addRule("<nospace> ::= '!'...'~' | <accented>");
+    
+    // <nospecial> : Comme nospace mais exclut souvent ':' pour le parsing des paramètres IRC
+    // On définit donc les plages autour de ':' (qui est le code 58)
+    grammar.addRule("<nospecial> ::= '!'...'9' | ';'...'~' | <accented>");
 
-	grammar.addRule("<SPACE> ::= ' ' { ' ' }");
-	grammar.addRule("<crlf> ::= '\r' '\n'");
+    // Caractères de contrôle et espaces
+    grammar.addRule("<nonwhite> ::= 0x21...0xFF"); // Tout sauf espace et contrôles C0
+    grammar.addRule("<SPACE> ::= ' ' { ' ' }");
+    grammar.addRule("<crlf> ::= '\r' '\n'");
 
-	grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
-	grammar.addRule("<trailing> ::= { <safechar> }");
+    // Structure des messages
+    grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
+    grammar.addRule("<trailing> ::= { <safechar> }");
 
-	grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
-	grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
+    // Paramètres et Commandes
+    grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
+    grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
 
-	grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
-	grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
+    // Identités
+    grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
+    grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
 
-	grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
-	grammar.addRule("<hostname-end> ::= <letter> | <number>");
-	grammar.addRule("<servername> ::= <letter> { <hostname-char> } <hostname-end>");
+    // Réseau
+    grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
+    grammar.addRule("<hostname-end> ::= <letter> | <number>");
+    grammar.addRule("<servername> ::= <letter> { <hostname-char> } [ <hostname-end> ]");
 
-	grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]");
-	grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
+    // Message complet
+    grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <servername> ]");
+    grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
 }
 
 int Server::init() {
@@ -255,9 +323,15 @@ int Server::init() {
 }
 
 void Server::run() {
-	while(true) {
+	while (_running) {
 		struct epoll_event rev[1028];
 		int num_events = epoll_wait(_epfd, rev, 1028, -1);
+		if (num_events < 0) {
+			if (_running) {
+				std::cerr << "Error: epoll_wait failed" << std::endl;
+			}
+			break;
+		}
 		if (num_events > 0)
 			for (int i = 0; i < num_events; ++i) {
 				handle_event(rev[i]);
@@ -267,16 +341,7 @@ void Server::run() {
 
 void Server::close()
 {
-	std::map<int, Client*>::iterator it;
-	for (it = _clients.begin(); it != _clients.end(); ++it) {
-		delete it->second;
-	}
-	_clients.clear();
-
-	if (_socketfd != -1) ::close(_socketfd);
-	if (_epfd != -1) ::close(_epfd);
-
-	::exit(0);
+	cleanupResources();
 }
 
 int Server::handle_event(struct epoll_event ev) {

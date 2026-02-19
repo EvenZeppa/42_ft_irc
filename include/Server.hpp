@@ -29,8 +29,12 @@ private:
 
 	int _socketfd;
 	int _epfd;
+	bool _running;
+	bool _isClosed;
 
 	Grammar _grammar;
+
+	void cleanupResources();
 public:
 	Server();
 	Server(const Server& other);

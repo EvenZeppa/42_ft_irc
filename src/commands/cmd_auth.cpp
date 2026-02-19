@@ -6,6 +6,8 @@
 
 #include <cctype>
 #include <ctime>
+#include <set>
+#include <vector>
 
 namespace {
 bool isValidNickChar(char c) {
@@ -165,6 +167,53 @@ void CommandManager::cmdQuit(Server& server, Client& client, const std::vector<s
         reason = args[0];
     }
     std::string msg = ":" + client.fullmask() + " QUIT :" + reason + "\r\n";
+
+    std::vector<std::string> joinedChannels;
+    std::map<std::string, Channel*>& channels = server.channels();
+    for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
+        if (it->second && it->second->hasMember(client.nickname())) {
+            joinedChannels.push_back(it->first);
+        }
+    }
+
+    std::set<int> notifiedClients;
+    std::map<int, Client*>& clients = server.clients();
+    for (std::vector<std::string>::iterator chanIt = joinedChannels.begin(); chanIt != joinedChannels.end(); ++chanIt) {
+        Channel* channel = server.getChannel(*chanIt);
+        if (!channel) {
+            continue;
+        }
+
+        for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+            if (!it->second || it->second->fd() == client.fd()) {
+                continue;
+            }
+            if (!it->second->isInChannel(*chanIt)) {
+                continue;
+            }
+            if (notifiedClients.insert(it->second->fd()).second) {
+                it->second->appendToWriteBuffer(msg);
+                server.handleClientWrite(*it->second);
+            }
+        }
+
+        channel->removeMember(client.nickname());
+        channel->removeOperator(client.nickname());
+        client.leaveChannel(*chanIt);
+
+        bool isEmpty = true;
+        for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+            if (it->second && it->second->isInChannel(*chanIt)) {
+                isEmpty = false;
+                break;
+            }
+        }
+        if (isEmpty) {
+            delete channel;
+            server.removeChannel(*chanIt);
+        }
+    }
+
     client.appendToWriteBuffer(msg);
     server.handleClientWrite(client);
     client.fd(-1);

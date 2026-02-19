@@ -293,6 +293,65 @@ void test_part_command() {
 	}
 }
 
+void test_quit_command() {
+	std::cout << "\n--- Testing QUIT Command ---" << std::endl;
+
+	Server server;
+	server.name("TestServer");
+
+	Client* quitter = new Client(100);
+	quitter->nickname("Alice").username("alice").hostname("localhost").registered(true);
+	server.addClient(quitter);
+
+	Client* bob = new Client(101);
+	bob->nickname("Bob").username("bob").hostname("localhost").registered(true);
+	server.addClient(bob);
+
+	Client* charlie = new Client(102);
+	charlie->nickname("Charlie").username("charlie").hostname("localhost").registered(true);
+	server.addClient(charlie);
+
+	Channel* general = new Channel("#general");
+	general->addMember("Alice");
+	general->addMember("Bob");
+	server.addChannel(general);
+	quitter->joinChannel("#general");
+	bob->joinChannel("#general");
+
+	Channel* dev = new Channel("#dev");
+	dev->addMember("Alice");
+	dev->addMember("Charlie");
+	server.addChannel(dev);
+	quitter->joinChannel("#dev");
+	charlie->joinChannel("#dev");
+
+	Channel* solo = new Channel("#solo");
+	solo->addMember("Alice");
+	server.addChannel(solo);
+	quitter->joinChannel("#solo");
+
+	CommandManager cm;
+	std::vector<std::string> args;
+	args.push_back("Leaving now");
+	cm.cmdQuit(server, *quitter, args);
+
+	assert(quitter->fd() == -1);
+	assert(!quitter->isInChannel("#general"));
+	assert(!quitter->isInChannel("#dev"));
+	assert(!quitter->isInChannel("#solo"));
+
+	assert(!general->hasMember("Alice"));
+	assert(!dev->hasMember("Alice"));
+	assert(server.hasChannel("#general"));
+	assert(server.hasChannel("#dev"));
+	assert(!server.hasChannel("#solo"));
+
+	assert(bob->writeBuffer().find(" QUIT :Leaving now\r\n") != std::string::npos);
+	assert(charlie->writeBuffer().find(" QUIT :Leaving now\r\n") != std::string::npos);
+
+	std::cout << "✓ QUIT removed client from all channels and notified peers" << std::endl;
+}
+
 void test_topic_command() {
 	std::cout << "\n--- Testing TOPIC Command ---" << std::endl;
 	
@@ -756,6 +815,7 @@ int run_commands_tests() {
 		std::cout << "═══════════════════════════════════════" << std::endl;
 		test_join_command();
 		test_part_command();
+		test_quit_command();
 		test_topic_command();
 		
 		// Message tests

@@ -127,6 +127,7 @@ void CommandManager::cmdPart(Server& server, Client& client, const std::vector<s
         }
     }
     if (isEmpty) {
+        delete channel;
         server.removeChannel(channelName);
     }
 }
