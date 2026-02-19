@@ -9,8 +9,255 @@
 #include <cstdlib>
 #include <cerrno>
 #include <sstream>
+#include <cctype>
 
 #include "../include/Logger.hpp"
+
+namespace {
+std::string toLowerCopy(const std::string& input) {
+	std::string out = input;
+	for (size_t i = 0; i < out.size(); ++i) {
+		out[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(out[i])));
+	}
+	return out;
+}
+
+bool parseLogType(const std::string& token, Logger::Type& type) {
+	std::string t = toLowerCopy(token);
+	if (t == "in") {
+		type = Logger::IN;
+		return true;
+	}
+	if (t == "out") {
+		type = Logger::OUT;
+		return true;
+	}
+	if (t == "info") {
+		type = Logger::INFO;
+		return true;
+	}
+	if (t == "error") {
+		type = Logger::ERROR;
+		return true;
+	}
+	return false;
+}
+
+void printLogStatus() {
+	std::cout << "\033[33m[Console] " << Logger::enabledSummary() << "\033[0m" << std::endl;
+}
+
+void printConsoleHelp() {
+	std::cout << "\n=== ft_irc console help ===" << std::endl;
+	std::cout << "  help                     Show this help" << std::endl;
+	std::cout << "  quit                     Stop server cleanly" << std::endl;
+	std::cout << "  clear                    Clear terminal" << std::endl;
+	std::cout << "  clients                  List connected clients" << std::endl;
+	std::cout << "  channels                 List existing channels" << std::endl;
+	std::cout << "  client <fd|nick>         Show client details" << std::endl;
+	std::cout << "  log show                 Show log filters" << std::endl;
+	std::cout << "  log all                  Enable all log types" << std::endl;
+	std::cout << "  log none                 Disable all log types" << std::endl;
+	std::cout << "  log <in|out|info|error> <on|off|toggle>" << std::endl;
+	std::cout << "===========================\n" << std::endl;
+}
+
+Client* findClientByNick(Server& server, const std::string& nickname) {
+	std::map<int, Client*>& clients = server.clients();
+	for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+		if (it->second && it->second->nickname() == nickname) {
+			return it->second;
+		}
+	}
+	return NULL;
+}
+
+void printClientInfo(Server& server, Client& client) {
+	std::cout << "[Client] FD=" << client.fd();
+	if (!client.nickname().empty()) {
+		std::cout << " NICK=" << client.nickname();
+	}
+	if (!client.username().empty()) {
+		std::cout << " USER=" << client.username();
+	}
+	if (!client.hostname().empty()) {
+		std::cout << " HOST=" << client.hostname();
+	}
+	std::cout << " REGISTERED=" << (client.isRegistered() ? "YES" : "NO");
+
+	std::string channelList;
+	std::map<std::string, Channel*>& channels = server.channels();
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
+		if (it->second && client.isInChannel(it->first)) {
+			if (!channelList.empty()) {
+				channelList += ",";
+			}
+			channelList += it->first;
+		}
+	}
+	if (!channelList.empty()) {
+		std::cout << " CHANNELS=" << channelList;
+	}
+	std::cout << std::endl;
+}
+
+void printClients(Server& server) {
+	std::map<int, Client*>& clients = server.clients();
+	if (clients.empty()) {
+		std::cout << "[Console] No connected clients" << std::endl;
+		return;
+	}
+	std::cout << "[Console] Clients:" << std::endl;
+	for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+		if (it->second) {
+			printClientInfo(server, *it->second);
+		}
+	}
+}
+
+void printChannels(Server& server) {
+	std::map<std::string, Channel*>& channels = server.channels();
+	if (channels.empty()) {
+		std::cout << "[Console] No channels" << std::endl;
+		return;
+	}
+	std::cout << "[Console] Channels:" << std::endl;
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
+		if (!it->second) {
+			continue;
+		}
+		std::cout << "  " << it->first;
+		if (!it->second->topic().empty()) {
+			std::cout << " (topic: " << it->second->topic() << ")";
+		}
+		std::cout << std::endl;
+	}
+}
+
+void handleConsoleCommand(Server& server, const std::string& line) {
+	std::istringstream iss(line);
+	std::string cmd;
+	if (!(iss >> cmd)) {
+		return;
+	}
+
+	cmd = toLowerCopy(cmd);
+	if (cmd == "quit") {
+		server.close();
+		return;
+	}
+
+	if (cmd == "clear") {
+		std::cout << "\033[2J\033[H" << std::flush;
+		return;
+	}
+
+	if (cmd == "help") {
+		printConsoleHelp();
+		return;
+	}
+
+	if (cmd == "clients") {
+		printClients(server);
+		return;
+	}
+
+	if (cmd == "channels") {
+		printChannels(server);
+		return;
+	}
+
+	if (cmd == "client") {
+		std::string selector;
+		if (!(iss >> selector)) {
+			std::cout << "[Console] Usage: client <fd|nick>" << std::endl;
+			return;
+		}
+
+		bool isNumber = true;
+		for (size_t i = 0; i < selector.size(); ++i) {
+			if (!std::isdigit(static_cast<unsigned char>(selector[i]))) {
+				isNumber = false;
+				break;
+			}
+		}
+
+		Client* target = NULL;
+		if (isNumber) {
+			std::istringstream ss(selector);
+			int fd = -1;
+			ss >> fd;
+			target = server.getClient(fd);
+		} else {
+			target = findClientByNick(server, selector);
+		}
+
+		if (!target) {
+			std::cout << "[Console] Client not found" << std::endl;
+			return;
+		}
+		printClientInfo(server, *target);
+		return;
+	}
+
+	if (cmd == "log") {
+		std::string arg1;
+		if (!(iss >> arg1)) {
+			printLogStatus();
+			return;
+		}
+
+		arg1 = toLowerCopy(arg1);
+		if (arg1 == "show" || arg1 == "status") {
+			printLogStatus();
+			return;
+		}
+		if (arg1 == "all") {
+			Logger::enableAll();
+			printLogStatus();
+			return;
+		}
+		if (arg1 == "none") {
+			Logger::disableAll();
+			printLogStatus();
+			return;
+		}
+
+		Logger::Type type;
+		if (!parseLogType(arg1, type)) {
+			std::cout << "[Console] Unknown log type: " << arg1 << std::endl;
+			std::cout << "[Console] Use: log <in|out|info|error> <on|off|toggle>" << std::endl;
+			return;
+		}
+
+		std::string arg2;
+		if (!(iss >> arg2)) {
+			Logger::setEnabled(type, !Logger::isEnabled(type));
+			printLogStatus();
+			return;
+		}
+
+		arg2 = toLowerCopy(arg2);
+		if (arg2 == "on") {
+			Logger::setEnabled(type, true);
+		} else if (arg2 == "off") {
+			Logger::setEnabled(type, false);
+		} else if (arg2 == "toggle") {
+			Logger::setEnabled(type, !Logger::isEnabled(type));
+		} else {
+			std::cout << "[Console] Unknown mode: " << arg2 << std::endl;
+			std::cout << "[Console] Use on, off or toggle" << std::endl;
+			return;
+		}
+
+		printLogStatus();
+		return;
+	}
+
+	std::cout << "[Console] Unknown command: " << cmd << std::endl;
+	std::cout << "[Console] Type 'help' for available commands" << std::endl;
+}
+} // namespace
 
 Server::Server() :
 	_host("127.0.0.1"),
@@ -376,7 +623,7 @@ int Server::handle_event(struct epoll_event ev) {
 	} else if (fd == STDIN_FILENO) {
 		std::string line;
 		std::getline(std::cin, line);
-		if (line == "quit") close();
+		handleConsoleCommand(*this, line);
 	} else {
 		std::map<int, Client*>::iterator it = _clients.find(fd);
 		if (it != _clients.end()) {
@@ -424,15 +671,6 @@ void Server::handleClientRead(Client& client) {
 		buffer[bytesRead] = '\0';
 		client.appendToReadBuffer(std::string(buffer));
 		Logger::log(Logger::IN, client.fd(), std::string(buffer), client.nickname());
-
-		// Normalize line endings: convert LF to CRLF if not already present
-		std::string& readBuf = client.readBuffer();
-		for (size_t i = 0; i < readBuf.length(); i++) {
-			if (readBuf[i] == '\n' && (i == 0 || readBuf[i-1] != '\r')) {
-				readBuf.insert(i, 1, '\r');
-				i++; // Skip the \n we just processed
-			}
-		}
 
 		// Parse all complete commands in buffer
 		while (!client.readBuffer().empty()) {

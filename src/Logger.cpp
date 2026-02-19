@@ -5,6 +5,8 @@
 #include <sstream>
 
 namespace {
+bool g_enabled[4] = {true, true, true, true};
+
 const char* colorFor(Logger::Type type) {
 	switch (type) {
 		case Logger::IN:
@@ -17,6 +19,20 @@ const char* colorFor(Logger::Type type) {
 			return "\033[31m";
 	}
 	return "\033[33m";
+}
+
+const char* typeNameFor(Logger::Type type) {
+	switch (type) {
+		case Logger::IN:
+			return "IN";
+		case Logger::OUT:
+			return "OUT";
+		case Logger::INFO:
+			return "INFO";
+		case Logger::ERROR:
+			return "ERROR";
+	}
+	return "UNKNOWN";
 }
 
 const char* directionFor(Logger::Type type) {
@@ -76,7 +92,49 @@ std::ostream& streamFor(Logger::Type type) {
 }
 } // namespace
 
+void Logger::setEnabled(Type type, bool enabled) {
+	if (type < IN || type > ERROR) {
+		return;
+	}
+	g_enabled[type] = enabled;
+}
+
+bool Logger::isEnabled(Type type) {
+	if (type < IN || type > ERROR) {
+		return false;
+	}
+	return g_enabled[type];
+}
+
+void Logger::enableAll() {
+	for (int i = IN; i <= ERROR; ++i) {
+		g_enabled[i] = true;
+	}
+}
+
+void Logger::disableAll() {
+	for (int i = IN; i <= ERROR; ++i) {
+		g_enabled[i] = false;
+	}
+}
+
+std::string Logger::enabledSummary() {
+	std::string summary;
+	for (int i = IN; i <= ERROR; ++i) {
+		if (!summary.empty()) {
+			summary += " ";
+		}
+		summary += typeNameFor(static_cast<Type>(i));
+		summary += "=";
+		summary += (g_enabled[i] ? "ON" : "OFF");
+	}
+	return summary;
+}
+
 void Logger::log(Type type, int fd, const std::string& message, const std::string& nickname) {
+	if (!isEnabled(type)) {
+		return;
+	}
 	std::ostream& out = streamFor(type);
 	out << colorFor(type)
 		<< buildTimestamp() << " "
