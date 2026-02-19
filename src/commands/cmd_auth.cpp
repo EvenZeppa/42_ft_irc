@@ -3,10 +3,12 @@
 #include "CommandManager.hpp"
 #include "Server.hpp"
 #include "network/IrcReplies.hpp"
+#include "Logger.hpp"
 
 #include <cctype>
 #include <ctime>
 #include <set>
+#include <sstream>
 #include <vector>
 
 namespace {
@@ -43,67 +45,69 @@ bool nicknameInUse(const Server& server, const Client& client, const std::string
 void sendWelcome(Server& server, Client& client) {
     std::string msg = ":" + server.name() + " 001 " + client.nickname() +
                       " :Welcome to the Internet Relay Network " + client.fullmask() + "\r\n";
-    std::cout << "[WELCOME] Sending to fd=" << client.fd() << ": " << msg;
+    Logger::log(Logger::INFO, client.fd(), "WELCOME sending: " + msg, client.nickname());
     client.appendToWriteBuffer(msg);
     server.handleClientWrite(client);
 }
 
 void tryRegister(Server& server, Client& client) {
-    std::cout << "[tryRegister] fd=" << client.fd() 
-              << " registered=" << client.isRegistered()
-              << " nick=" << client.isNickReceived()
-              << " user=" << client.isUserReceived()
-              << " pass=" << client.isPassReceived()
-              << " server_pass_set=" << (!server.pass().empty()) << std::endl;
+    std::ostringstream status;
+    status << "tryRegister fd=" << client.fd()
+           << " registered=" << client.isRegistered()
+           << " nick=" << client.isNickReceived()
+           << " user=" << client.isUserReceived()
+           << " pass=" << client.isPassReceived()
+           << " server_pass_set=" << (!server.pass().empty());
+    Logger::log(Logger::INFO, client.fd(), status.str(), client.nickname());
     
     if (client.isRegistered()) {
-        std::cout << "[tryRegister] Already registered, skipping" << std::endl;
+        Logger::log(Logger::INFO, client.fd(), "tryRegister already registered, skipping", client.nickname());
         return;
     }
     if (!client.isNickReceived() || !client.isUserReceived()) {
-        std::cout << "[tryRegister] Missing NICK or USER" << std::endl;
+        Logger::log(Logger::INFO, client.fd(), "tryRegister missing NICK or USER", client.nickname());
         return;
     }
     if (!server.pass().empty() && !client.isPassReceived()) {
-        std::cout << "[tryRegister] Server requires password but PASS not received" << std::endl;
+        Logger::log(Logger::INFO, client.fd(), "tryRegister PASS required but not received", client.nickname());
         return;
     }
-    std::cout << "[tryRegister] Registration complete! Sending welcome" << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "tryRegister complete, sending welcome", client.nickname());
     client.registered(true);
     sendWelcome(server, client);
 }
 } // namespace
 
 void CommandManager::cmdPass(Server& server, Client& client, const std::vector<std::string>& args) {
-    std::cout << "[PASS] Client fd=" << client.fd() << " pass=" << args[0] << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "PASS received", client.nickname());
     if (client.isRegistered()) {
-        std::cout << "[PASS] Already registered" << std::endl;
+        Logger::log(Logger::ERROR, client.fd(), "PASS rejected (already registered)", client.nickname());
         throw IrcReplies(ERR_ALREADYREGISTRED);
     }
     if (!server.pass().empty() && args[0] != server.pass()) {
-        std::cout << "[PASS] Password mismatch: expected=" << server.pass() << " got=" << args[0] << std::endl;
+        Logger::log(Logger::ERROR, client.fd(), "PASS mismatch", client.nickname());
         throw IrcReplies(ERR_PASSWDMISMATCH);
     }
-    std::cout << "[PASS] Password accepted" << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "PASS accepted", client.nickname());
     client.passReceived(true);
     tryRegister(server, client);
 }
 
 void CommandManager::cmdNick(Server& server, Client& client, const std::vector<std::string>& args) {
-    std::cout << "[NICK] Client fd=" << client.fd() << " nick=" << args[0] << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "NICK received", client.nickname());
     if (args[0].empty()) {
-        std::cout << "[NICK] No nickname given" << std::endl;
+        Logger::log(Logger::ERROR, client.fd(), "NICK missing", client.nickname());
         throw IrcReplies(ERR_NONICKNAMEGIVEN);
     }
     if (!isValidNickname(args[0])) {
-        std::cout << "[NICK] Invalid nickname: " << args[0] << std::endl;
+        Logger::log(Logger::ERROR, client.fd(), "NICK invalid: " + args[0], client.nickname());
         throw IrcReplies(ERR_ERRONEUSNICKNAME, args[0]);
     }
     if (nicknameInUse(server, client, args[0])) {
-        std::cout << "[NICK] Nickname in use: " << args[0] << std::endl;
+        Logger::log(Logger::ERROR, client.fd(), "NICK in use: " + args[0], client.nickname());
         throw IrcReplies(ERR_NICKNAMEINUSE, args[0]);
     }
-    std::cout << "[NICK] Nickname accepted: " << args[0] << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "NICK accepted: " + args[0], client.nickname());
     std::string oldNick = client.nickname();
 	client.nickname(args[0]);
     client.nickReceived(true);
@@ -119,24 +123,24 @@ void CommandManager::cmdNick(Server& server, Client& client, const std::vector<s
 }
 
 void CommandManager::cmdUser(Server& server, Client& client, const std::vector<std::string>& args) {
-    std::cout << "[USER] Client fd=" << client.fd() << " user=" << args[0] << " realname=" << args[3] << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "USER received", client.nickname());
     if (client.isRegistered()) {
-        std::cout << "[USER] Already registered" << std::endl;
+        Logger::log(Logger::ERROR, client.fd(), "USER rejected (already registered)", client.nickname());
         throw IrcReplies(ERR_ALREADYREGISTRED);
     }
     client.username(args[0]);
     client.realname(args[3]);
     client.userReceived(true);
-    std::cout << "[USER] User info set" << std::endl;
+    Logger::log(Logger::INFO, client.fd(), "USER info set", client.nickname());
     tryRegister(server, client);
 }
 
 void CommandManager::cmdCap(Server& server, Client& client, const std::vector<std::string>& args) {
-    std::cout << "[CAP] Client fd=" << client.fd();
     if (!args.empty()) {
-        std::cout << " sub=" << args[0];
+        Logger::log(Logger::INFO, client.fd(), "CAP " + args[0], client.nickname());
+    } else {
+        Logger::log(Logger::INFO, client.fd(), "CAP", client.nickname());
     }
-    std::cout << std::endl;
     
     if (args.empty()) {
         return;
@@ -145,7 +149,7 @@ void CommandManager::cmdCap(Server& server, Client& client, const std::vector<st
     const std::string& sub = args[0];
     if (sub == "LS") {
         std::string msg = ":" + server.name() + " CAP * LS :\r\n";
-        std::cout << "[CAP LS] Sending: " << msg;
+        Logger::log(Logger::INFO, client.fd(), "CAP LS", client.nickname());
         client.appendToWriteBuffer(msg);
     } else if (sub == "REQ") {
         std::string msg = ":" + server.name() + " CAP * NAK :";
@@ -153,10 +157,10 @@ void CommandManager::cmdCap(Server& server, Client& client, const std::vector<st
             msg += args[1];
         }
         msg += "\r\n";
-        std::cout << "[CAP REQ] Sending: " << msg;
+        Logger::log(Logger::INFO, client.fd(), "CAP REQ", client.nickname());
         client.appendToWriteBuffer(msg);
     } else if (sub == "END") {
-        std::cout << "[CAP END] Client finished capability negotiation" << std::endl;
+        Logger::log(Logger::INFO, client.fd(), "CAP END", client.nickname());
     }
     server.handleClientWrite(client);
 }
