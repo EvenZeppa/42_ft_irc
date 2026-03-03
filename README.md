@@ -1,6 +1,6 @@
 # ft_irc - IRC Server Implementation
 
-*This project has been created as part of the 42 curriculum by ezeppa.*
+*This project has been created as part of the 42 curriculum by ezeppa and vbonnard.*
 
 ---
 
@@ -51,7 +51,7 @@ Ce projet répond aux exigences de l'école 42 pour le projet **ft_irc**:
 
 #### Choix Techniques Conformes
 - **C++98**: Strict respect du standard (compilation avec `-std=c++98`)
-- **I/O Non-bloquant**: Utilisation d'`epoll` (Linux) avec `epoll-shim` (macOS)
+- **I/O Non-bloquant**: Utilisation d'`epoll` (Linux natif)
 - **Parsing Robuste**: Intégration de BNFParser pour valider le protocole IRC
 - **Gestion d'Erreurs**: Codes de réponse IRC standards (numerics RFC 1459)
 - **Flags de Compilation**: `-Wall -Wextra -Werror`
@@ -79,10 +79,9 @@ ft_irc/
 │       ├── cmd_mode.cpp      # MODE (utilisateur et canal)
 │       ├── cmd_ops.cpp       # KICK, INVITE
 │       └── cmd_privmsg.cpp   # PRIVMSG
-├── third_party/          # Bibliothèques tierces
-│   ├── BNFParserLib/     # Parseur BNF pour IRC
-│   └── epoll-shim/       # Compatibilité macOS
-└── CMakeLists.txt        # Configuration de compilation
+│   └── bnf/              # BNFParser (parseur IRC intégré)
+├── include/bnf/          # Headers BNFParser
+└── Makefile              # Compilation (all, clean, fclean, re)
 ```
 
 ## � Instructions
@@ -108,7 +107,7 @@ make re
 **Requirements:**
 - C++ compiler supporting C++98 standard (g++ or clang++)
 - Make
-- For macOS: The Makefile automatically handles epoll-shim compilation
+- Linux (les sockets epoll sont natives)
 
 The executable `ircserv` will be generated in the project root directory.
 
@@ -397,7 +396,7 @@ Le serveur implémente les codes de réponse numériques standards:
 ## 🔍 Détails d'Implémentation
 
 ### Gestion des Connexions
-- **Modèle I/O**: `epoll` (Linux) avec `epoll-shim` (macOS) pour multiplexage
+- **Modèle I/O**: `epoll` (Linux natif) pour multiplexage
 - **Non-blocking**: Toutes les opérations réseau sont non-bloquantes
 - **Buffers**: Chaque client a des buffers de lecture/écriture indépendants
 
@@ -479,9 +478,12 @@ Ce projet permet d'apprendre:
 
 Consultez les fichiers suivants pour les tests:
 - `MANUAL_TESTS.md`: Guide de tests manuels avec irssi
-- `TEST_SUITE.md`: Suite de tests exhaustive (voir fichier généré)
+- `run_tests.sh`: Script de tests automatisés (`./run_tests.sh -v`)
 
 ## 👥 Auteurs
+
+- **ezeppa** - [ezeppa@student.42.fr](mailto:ezeppa@student.42.fr)
+- **vbonnard** - [vbonnard@student.42.fr](mailto:vbonnard@student.42.fr)
 
 Projet réalisé dans le cadre du cursus de l'école 42.
 
