@@ -1,6 +1,18 @@
-#include "../include/Server.hpp"
-#include "../include/Client.hpp"
-#include "../include/Channel.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 00:00:00 by ezeppa            #+#    #+#             */
+/*   Updated: 2025/03/03 00:00:00 by ezeppa           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Server.hpp"
+#include "Client.hpp"
+#include "Channel.hpp"
 
 #include "BNFParser.hpp"
 #include "Grammar.hpp"

@@ -1,4 +1,16 @@
-#include "../include/Server.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/03 00:00:00 by ezeppa            #+#    #+#             */
+/*   Updated: 2025/03/03 00:00:00 by ezeppa           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Server.hpp"
 
 #include <sys/socket.h>
 #include <netdb.h>
@@ -11,7 +23,7 @@
 #include <sstream>
 #include <cctype>
 
-#include "../include/Logger.hpp"
+#include "Logger.hpp"
 
 namespace {
 /** @brief Convert a string to lowercase. @param input Source string. @return Lowercase copy. */
