@@ -3,7 +3,7 @@
 #include <string>
 #include <exception>
 
-// code RFC 1459
+/** @brief IRC RFC 1459 numeric replies used by the server. */
 #define RPL_WELCOME 001
 #define RPL_UMODEIS 221
 #define RPL_AWAY 301
@@ -52,12 +52,21 @@ private:
     int _code;
     std::string _arg;
 public:
+    /**
+     * @brief Construct an IRC reply exception.
+     * @param code Numeric IRC code.
+     * @param arg Optional contextual argument.
+     */
     IrcReplies(int code, const std::string& arg = "") : _code(code), _arg(arg) {}
+    /** @brief Destroy the exception object. */
     virtual ~IrcReplies() throw() {}
 
+    /** @brief Get numeric code. @return IRC reply code. */
     int Code() const { return _code; } 
+    /** @brief Get contextual argument. @return Optional argument string. */
     const std::string& Arg() const { return _arg; }
 
+    /** @brief Get textual exception message. @return C-string view over argument. */
     virtual const char* what() const throw() {
         return _arg.c_str();
     }

@@ -1,5 +1,3 @@
-// PASS, NICK, USER, CAP, QUIT, WHO, PING, PONG
-
 #include "CommandManager.hpp"
 #include "Server.hpp"
 #include "network/IrcReplies.hpp"
@@ -12,11 +10,13 @@
 #include <vector>
 
 namespace {
+/** @brief Validate one nickname character. @param c Character to test. @return True when allowed by IRC nickname rules. */
 bool isValidNickChar(char c) {
     return std::isalnum(static_cast<unsigned char>(c)) || c == '-' || c == '[' || c == ']' ||
            c == '\\' || c == '`' || c == '^' || c == '{' || c == '}';
 }
 
+/** @brief Validate a nickname syntax. @param nick Candidate nickname. @return True when nickname is valid. */
 bool isValidNickname(const std::string& nick) {
     if (nick.empty()) {
         return false;
@@ -32,6 +32,7 @@ bool isValidNickname(const std::string& nick) {
     return true;
 }
 
+/** @brief Check whether a nickname is already used by another client. @param server Server context. @param client Current client. @param nick Target nickname. @return True when nickname is taken. */
 bool nicknameInUse(const Server& server, const Client& client, const std::string& nick) {
     std::map<int, Client*>& clients = server.clients();
     for (std::map<int, Client*>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -42,6 +43,7 @@ bool nicknameInUse(const Server& server, const Client& client, const std::string
     return false;
 }
 
+/** @brief Send numeric welcome reply to a newly registered client. @param server Server context. @param client Target client. */
 void sendWelcome(Server& server, Client& client) {
     std::string msg = ":" + server.name() + " 001 " + client.nickname() +
                       " :Welcome to the Internet Relay Network " + client.fullmask() + "\r\n";
@@ -50,6 +52,7 @@ void sendWelcome(Server& server, Client& client) {
     server.handleClientWrite(client);
 }
 
+/** @brief Attempt final registration once PASS/NICK/USER requirements are met. @param server Server context. @param client Target client. */
 void tryRegister(Server& server, Client& client) {
     std::ostringstream status;
     status << "tryRegister fd=" << client.fd()
@@ -76,7 +79,7 @@ void tryRegister(Server& server, Client& client) {
     client.registered(true);
     sendWelcome(server, client);
 }
-} // namespace
+}
 
 void CommandManager::cmdPass(Server& server, Client& client, const std::vector<std::string>& args) {
     Logger::log(Logger::INFO, client.fd(), "PASS received", client.nickname());

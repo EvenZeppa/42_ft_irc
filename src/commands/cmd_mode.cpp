@@ -1,5 +1,3 @@
-// MODE
-
 #include "CommandManager.hpp"
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -7,12 +5,7 @@
 #include <sstream>
 
 namespace {
-    std::string intToString(int val) {
-        std::stringstream ss;
-        ss << val;
-        return ss.str();
-    }
-
+    /** @brief Convert decimal string to integer. @param str Input string. @return Parsed integer value. */
     int stringToInt(const std::string& str) {
         std::stringstream ss(str);
         int val;
@@ -24,13 +17,11 @@ namespace {
 void CommandManager::cmdMode(Server& server, Client& client, const std::vector<std::string>& args) {
     std::string target = args[0];
 
-    // User mode
     if (target[0] != '#') {
         if (target != client.nickname()) {
             throw IrcReplies(ERR_USERSDONTMATCH);
         }
 
-        // Just return current mode for now
         if (args.size() == 1) {
             std::string modeStr = "+";
             if (client.hasMode('i')) modeStr += "i";
@@ -40,7 +31,6 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
             return;
         }
 
-        // Set user mode
         std::string modeString = args[1];
         bool add = true;
         for (size_t i = 0; i < modeString.size(); ++i) {
@@ -59,7 +49,6 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
         return;
     }
 
-    // Channel mode
     Channel* channel = server.getChannel(target);
     if (!channel) {
         throw IrcReplies(ERR_NOSUCHCHANNEL, target);
@@ -69,7 +58,6 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
         throw IrcReplies(ERR_NOTONCHANNEL, target);
     }
 
-    // View mode
     if (args.size() == 1) {
         std::string modeStr = "+";
         if (channel->hasMode('i')) modeStr += "i";
@@ -84,7 +72,6 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
         return;
     }
 
-    // Set mode - requires operator
     if (!channel->hasOperator(client.nickname())) {
         throw IrcReplies(ERR_CHANOPRIVSNEEDED, target);
     }
@@ -107,7 +94,7 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
         }
 
         switch (mode) {
-            case 'i': // invite-only
+            case 'i':
                 if (add) {
                     channel->addMode('i');
                     appliedModes += "+i";
@@ -117,7 +104,7 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
                 }
                 break;
 
-            case 't': // topic restricted
+            case 't':
                 if (add) {
                     channel->addMode('t');
                     appliedModes += "+t";
@@ -127,7 +114,7 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
                 }
                 break;
 
-            case 'k': // key
+            case 'k':
                 if (add) {
                     if (paramIndex < args.size()) {
                         channel->key(args[paramIndex]);
@@ -143,7 +130,7 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
                 }
                 break;
 
-            case 'l': // limit
+            case 'l':
                 if (add) {
                     if (paramIndex < args.size()) {
                         int limit = stringToInt(args[paramIndex]);
@@ -160,7 +147,7 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
                 }
                 break;
 
-            case 'o': // operator
+            case 'o':
                 if (paramIndex < args.size()) {
                     std::string targetNick = args[paramIndex];
                     if (channel->hasMember(targetNick)) {
@@ -182,7 +169,6 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
         }
     }
 
-    // Broadcast mode change
     if (!appliedModes.empty()) {
         std::string modeMsg = ":" + client.fullmask() + " MODE " + target + 
                               " " + appliedModes + appliedParams + "\r\n";

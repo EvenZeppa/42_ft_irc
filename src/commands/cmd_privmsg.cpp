@@ -1,5 +1,3 @@
-// PRIVMSG
-
 #include "CommandManager.hpp"
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -21,7 +19,6 @@ void CommandManager::cmdPrivmsg(Server& server, Client& client, const std::vecto
         throw IrcReplies(ERR_NOTEXTTOSEND);
     }
 
-    // Channel message
     if (target[0] == '#') {
         Channel* channel = server.getChannel(target);
         if (!channel) {
@@ -32,7 +29,6 @@ void CommandManager::cmdPrivmsg(Server& server, Client& client, const std::vecto
             throw IrcReplies(ERR_CANNOTSENDTOCHAN, target);
         }
 
-        // Send to all channel members except sender
         std::string msg = ":" + client.fullmask() + " PRIVMSG " + target + " :" + message + "\r\n";
         std::map<int, Client*>& clients = server.clients();
         for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -43,7 +39,6 @@ void CommandManager::cmdPrivmsg(Server& server, Client& client, const std::vecto
             }
         }
     } else {
-        // Private message to user
         Client* targetClient = NULL;
         std::map<int, Client*>& clients = server.clients();
         for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {

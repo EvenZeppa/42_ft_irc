@@ -14,6 +14,7 @@
 #include "../include/Logger.hpp"
 
 namespace {
+/** @brief Convert a string to lowercase. @param input Source string. @return Lowercase copy. */
 std::string toLowerCopy(const std::string& input) {
 	std::string out = input;
 	for (size_t i = 0; i < out.size(); ++i) {
@@ -22,6 +23,7 @@ std::string toLowerCopy(const std::string& input) {
 	return out;
 }
 
+/** @brief Parse log category token. @param token User token. @param type Output category when successful. @return True on success. */
 bool parseLogType(const std::string& token, Logger::Type& type) {
 	std::string t = toLowerCopy(token);
 	if (t == "in") {
@@ -43,10 +45,12 @@ bool parseLogType(const std::string& token, Logger::Type& type) {
 	return false;
 }
 
+/** @brief Print current logger filter status to the console. */
 void printLogStatus() {
 	std::cout << "\033[33m[Console] " << Logger::enabledSummary() << "\033[0m" << std::endl;
 }
 
+/** @brief Print available interactive console commands. */
 void printConsoleHelp() {
 	std::cout << "\n=== ft_irc console help ===" << std::endl;
 	std::cout << "  help                     Show this help" << std::endl;
@@ -62,6 +66,7 @@ void printConsoleHelp() {
 	std::cout << "===========================\n" << std::endl;
 }
 
+/** @brief Find a client by nickname. @param server Server context. @param nickname Nickname to search. @return Client pointer or NULL. */
 Client* findClientByNick(Server& server, const std::string& nickname) {
 	std::map<int, Client*>& clients = server.clients();
 	for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -72,6 +77,7 @@ Client* findClientByNick(Server& server, const std::string& nickname) {
 	return NULL;
 }
 
+/** @brief Print one client summary line. @param server Server context. @param client Client to print. */
 void printClientInfo(Server& server, Client& client) {
 	std::cout << "[Client] FD=" << client.fd();
 	if (!client.nickname().empty()) {
@@ -101,6 +107,7 @@ void printClientInfo(Server& server, Client& client) {
 	std::cout << std::endl;
 }
 
+/** @brief Print all connected clients. @param server Server context. */
 void printClients(Server& server) {
 	std::map<int, Client*>& clients = server.clients();
 	if (clients.empty()) {
@@ -115,6 +122,7 @@ void printClients(Server& server) {
 	}
 }
 
+/** @brief Print all known channels. @param server Server context. */
 void printChannels(Server& server) {
 	std::map<std::string, Channel*>& channels = server.channels();
 	if (channels.empty()) {
@@ -134,6 +142,7 @@ void printChannels(Server& server) {
 	}
 }
 
+/** @brief Execute a command entered on server stdin console. @param server Server context. @param line Raw command line. */
 void handleConsoleCommand(Server& server, const std::string& line) {
 	std::istringstream iss(line);
 	std::string cmd;
@@ -257,7 +266,7 @@ void handleConsoleCommand(Server& server, const std::string& line) {
 	std::cout << "[Console] Unknown command: " << cmd << std::endl;
 	std::cout << "[Console] Type 'help' for available commands" << std::endl;
 }
-} // namespace
+}
 
 Server::Server() :
 	_host("127.0.0.1"),
@@ -320,19 +329,16 @@ void Server::cleanupResources() {
 	}
 }
 
-// Getters
 std::string Server::host() const { return _host; }
 std::string Server::port() const { return _port; }
 std::string Server::pass() const { return _pass; }
 std::string Server::name() const { return _name; }
 
-// Setters
 Server& Server::host(const std::string& host) { _host = host; return *this; }
 Server& Server::port(const std::string& port) { _port = port; return *this; }
 Server& Server::pass(const std::string& pass) { _pass = pass; return *this; }
 Server& Server::name(const std::string& name) { _name = name; return *this; }
 
-// Clients operations
 bool Server::addClient(Client* client) {
 	int fd = client->fd();
 	if (hasClient(fd))
@@ -382,7 +388,6 @@ std::map<int, Client*>& Server::clients() const {
 	return const_cast<std::map<int, Client*>&>(_clients);
 }
 
-// Channels operations
 bool Server::addChannel(Channel* channel) {
 	std::string name = channel->name();
 	if (hasChannel(name))
@@ -425,80 +430,37 @@ std::map<std::string, Channel*>& Server::channels() const {
 	return const_cast<std::map<std::string, Channel*>&>(_channels);
 }
 
-// void initGrammar(Grammar& grammar) {
-// 	grammar.addRule("<letter> ::= ( 'a' ... 'z' 'A' ... 'Z' )");
-// 	grammar.addRule("<number> ::= ( '0' ... '9' )");
-// 	grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
-
-// 	grammar.addRule("<nospace> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '} | '~'");
-// 	grammar.addRule("<safechar> ::= ' ' | '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
-// 	grammar.addRule("<nospecial> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
-// 	grammar.addRule("<nonwhite> ::= ( ^ 0x20 0x0 0xD 0xA )");
-
-// 	grammar.addRule("<SPACE> ::= ' ' { ' ' }");
-// 	grammar.addRule("<crlf> ::= '\r' '\n'");
-
-// 	grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
-// 	grammar.addRule("<trailing> ::= { <safechar> }");
-
-// 	grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
-// 	grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
-
-// 	grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
-// 	grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
-
-// 	grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
-// 	grammar.addRule("<hostname-end> ::= <letter> | <number>");
-// 	grammar.addRule("<servername> ::= <letter> { <hostname-char> } <hostname-end>");
-
-// 	grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]");
-// 	grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
-// }
-
+/** @brief Define the IRC grammar accepted by the parser. @param grammar Grammar object to configure. */
 void initGrammar(Grammar& grammar) {
-    // Définitions de base
     grammar.addRule("<letter> ::= 'a'...'z' | 'A'...'Z'");
     grammar.addRule("<number> ::= '0'...'9'");
     grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
-    
-    // Ajout des accents (Extended ASCII / ISO-8859-1)
-    // 0xA0 à 0xFF couvre la majorité des caractères accentués et spéciaux latins
+
     grammar.addRule("<accented> ::= 0xA0...0xFF");
 
-    // Nettoyage des règles complexes avec les plages
-    // <safechar> : Tous les caractères imprimables de l'espace (32) au tilde (126) + accents
     grammar.addRule("<safechar> ::= ' '...'~' | <accented>");
-    
-    // <nospace> : Comme safechar mais sans l'espace ('!' est le caractère 33)
+
     grammar.addRule("<nospace> ::= '!'...'~' | <accented>");
-    
-    // <nospecial> : Comme nospace mais exclut souvent ':' pour le parsing des paramètres IRC
-    // On définit donc les plages autour de ':' (qui est le code 58)
+
     grammar.addRule("<nospecial> ::= '!'...'9' | ';'...'~' | <accented>");
 
-    // Caractères de contrôle et espaces
-    grammar.addRule("<nonwhite> ::= 0x21...0xFF"); // Tout sauf espace et contrôles C0
+	grammar.addRule("<nonwhite> ::= 0x21...0xFF");
     grammar.addRule("<SPACE> ::= ' ' { ' ' }");
     grammar.addRule("<crlf> ::= '\r' '\n'");
 
-    // Structure des messages
     grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
     grammar.addRule("<trailing> ::= { <safechar> }");
 
-    // Paramètres et Commandes
     grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
     grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
 
-    // Identités
     grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
     grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
 
-    // Réseau
     grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
     grammar.addRule("<hostname-end> ::= <letter> | <number>");
     grammar.addRule("<servername> ::= <letter> { <hostname-char> } [ <hostname-end> ]");
 
-    // Message complet
     grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <servername> ]");
     grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
 }
@@ -604,7 +566,6 @@ int Server::handle_event(struct epoll_event ev) {
 
 			int cfd = accept(fd, (struct sockaddr *)&peer_addr, &peer_addr_size);
 
-			// @TODO : Verifier si on peut l'utiliser pour le client
 			fcntl(cfd, F_SETFL, O_NONBLOCK);
 
 			struct epoll_event nev;
@@ -672,7 +633,6 @@ void Server::handleClientRead(Client& client) {
 		client.appendToReadBuffer(std::string(buffer));
 		Logger::log(Logger::IN, client.fd(), std::string(buffer), client.nickname());
 
-		// Parse all complete commands in buffer
 		while (!client.readBuffer().empty()) {
 			BNFParser parser(_grammar);
 
@@ -716,7 +676,6 @@ void Server::handleClientRead(Client& client) {
 					break;
 				}
 			} else {
-				// No complete message yet, wait for more data
 				if (!client.readBuffer().empty()) {
 					Logger::log(Logger::INFO, client.fd(), "Incomplete message in buffer, waiting for more data", client.nickname());
 				}

@@ -7,6 +7,7 @@
 namespace {
 bool g_enabled[4] = {true, true, true, true};
 
+/** @brief Return ANSI color sequence for a log category. @param type Log category. @return ANSI escape string. */
 const char* colorFor(Logger::Type type) {
 	switch (type) {
 		case Logger::IN:
@@ -21,6 +22,7 @@ const char* colorFor(Logger::Type type) {
 	return "\033[33m";
 }
 
+/** @brief Return category label text. @param type Log category. @return Static label string. */
 const char* typeNameFor(Logger::Type type) {
 	switch (type) {
 		case Logger::IN:
@@ -35,6 +37,7 @@ const char* typeNameFor(Logger::Type type) {
 	return "UNKNOWN";
 }
 
+/** @brief Return direction marker for display. @param type Log category. @return Static direction string. */
 const char* directionFor(Logger::Type type) {
 	switch (type) {
 		case Logger::IN:
@@ -49,12 +52,14 @@ const char* directionFor(Logger::Type type) {
 	return "--";
 }
 
+/** @brief Convert integer to string in C++98 style. @param value Integer value. @return Decimal string form. */
 std::string intToString(int value) {
 	std::ostringstream oss;
 	oss << value;
 	return oss.str();
 }
 
+/** @brief Build current wall-clock timestamp. @return Formatted time token such as [HH:MM:SS]. */
 std::string buildTimestamp() {
 	std::time_t now = std::time(NULL);
 	std::tm* local = std::localtime(&now);
@@ -66,6 +71,7 @@ std::string buildTimestamp() {
 	return std::string(buffer);
 }
 
+/** @brief Build source identifier for logs. @param fd File descriptor. @param nickname Optional nickname. @return Identifier token. */
 std::string buildIdentifier(int fd, const std::string& nickname) {
 	if (!nickname.empty()) {
 		return "[NICK:" + nickname + "]";
@@ -73,6 +79,7 @@ std::string buildIdentifier(int fd, const std::string& nickname) {
 	return "[FD:" + intToString(fd) + "]";
 }
 
+/** @brief Remove trailing CR/LF from message payload. @param message Input message. @return Sanitized message or fallback token. */
 std::string sanitizeMessage(const std::string& message) {
 	std::string clean = message;
 	while (!clean.empty() && (clean[clean.size() - 1] == '\n' || clean[clean.size() - 1] == '\r')) {
@@ -84,13 +91,14 @@ std::string sanitizeMessage(const std::string& message) {
 	return clean;
 }
 
+/** @brief Select output stream for a category. @param type Log category. @return std::cerr for errors, otherwise std::cout. */
 std::ostream& streamFor(Logger::Type type) {
 	if (type == Logger::ERROR) {
 		return std::cerr;
 	}
 	return std::cout;
 }
-} // namespace
+}
 
 void Logger::setEnabled(Type type, bool enabled) {
 	if (type < IN || type > ERROR) {

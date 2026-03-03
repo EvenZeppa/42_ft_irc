@@ -61,7 +61,7 @@ std::string CommandManager::_buildReply(const Server& server, int code, std::str
             msg += ":Welcome to the Internet Relay Network " + arg1;
             break;
         case RPL_UMODEIS:
-            msg += ":Your user mode is " + arg1; // TODO: correction a faire ici
+            msg += ":Your user mode is " + arg1;
             break;
         case RPL_AWAY:
             msg += ":You are marked as away";
@@ -76,13 +76,13 @@ std::string CommandManager::_buildReply(const Server& server, int code, std::str
             msg += arg1 + " : " + arg2;
             break;
         case RPL_WHOISUSER:
-            msg += arg1 + " " + arg2 + " :is a user"; // TODO: correction a faire ici
+            msg += arg1 + " " + arg2 + " :is a user";
             break;
         case RPL_ENDOFWHO:
             msg += arg1 + " :End of WHO list";
             break;
         case RPL_NAMREPLY:
-            msg += "= " + arg1 + " :User list"; // TODO: correction a faire ici
+            msg += "= " + arg1 + " :User list";
             break;
         case RPL_INVITING:
             msg += arg1 + arg2;

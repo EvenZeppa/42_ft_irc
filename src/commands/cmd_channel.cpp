@@ -1,5 +1,3 @@
-// JOIN, PART, TOPIC, NAMES
-
 #include "CommandManager.hpp"
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -14,33 +12,27 @@ void CommandManager::cmdJoin(Server& server, Client& client, const std::vector<s
         key = args[1];
     }
 
-    // Validate channel name
     if (channelName.empty() || channelName[0] != '#') {
         throw IrcReplies(ERR_NOSUCHCHANNEL, channelName);
     }
 
     Channel* channel = server.getChannel(channelName);
     
-    // Create channel if it doesn't exist
     if (!channel) {
         channel = new Channel(channelName);
         server.addChannel(channel);
-        // First user becomes operator
         channel->addMember(client.nickname());
         channel->addOperator(client.nickname());
         client.joinChannel(channelName);
     } else {
-        // Check invite-only
         if (channel->isInviteOnly() && !channel->hasInvited(client.nickname())) {
             throw IrcReplies(ERR_INVITEONLYCHAN, channelName);
         }
         
-        // Check key
         if (channel->isKeyMode() && channel->key() != key) {
             throw IrcReplies(ERR_BADCHANNELKEY, channelName);
         }
         
-        // Check limit
         if (channel->isLimitMode() && channel->limit() > 0) {
             size_t memberCount = 0;
             std::map<int, Client*>& clients = server.clients();
@@ -54,13 +46,11 @@ void CommandManager::cmdJoin(Server& server, Client& client, const std::vector<s
             }
         }
         
-        // Add member
         channel->addMember(client.nickname());
         channel->removeInvited(client.nickname());
         client.joinChannel(channelName);
     }
 
-    // Send JOIN message to all channel members
     std::string joinMsg = ":" + client.fullmask() + " JOIN :" + channelName + "\r\n";
     std::map<int, Client*>& clients = server.clients();
     for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -70,7 +60,6 @@ void CommandManager::cmdJoin(Server& server, Client& client, const std::vector<s
         }
     }
 
-    // Send topic if exists
     if (!channel->topic().empty()) {
         std::string topicMsg = ":" + server.name() + " 332 " + client.nickname() + 
                                " " + channelName + " :" + channel->topic() + "\r\n";
@@ -83,7 +72,6 @@ void CommandManager::cmdJoin(Server& server, Client& client, const std::vector<s
         server.handleClientWrite(client);
     }
 
-    // Send NAMES list
     cmdNames(server, client, args);
 }
 
@@ -103,7 +91,6 @@ void CommandManager::cmdPart(Server& server, Client& client, const std::vector<s
         throw IrcReplies(ERR_NOTONCHANNEL, channelName);
     }
 
-    // Send PART message to all channel members
     std::string partMsg = ":" + client.fullmask() + " PART " + channelName + " :" + reason + "\r\n";
     std::map<int, Client*>& clients = server.clients();
     for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -113,12 +100,10 @@ void CommandManager::cmdPart(Server& server, Client& client, const std::vector<s
         }
     }
 
-    // Remove member
     channel->removeMember(client.nickname());
     channel->removeOperator(client.nickname());
     client.leaveChannel(channelName);
 
-    // Remove empty channel
     bool isEmpty = true;
     for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
         if (it->second && it->second->isInChannel(channelName)) {
@@ -144,7 +129,6 @@ void CommandManager::cmdTopic(Server& server, Client& client, const std::vector<
         throw IrcReplies(ERR_NOTONCHANNEL, channelName);
     }
 
-    // View topic
     if (args.size() == 1) {
         if (channel->topic().empty()) {
             throw IrcReplies(RPL_NOTOPIC, channelName);
@@ -157,7 +141,6 @@ void CommandManager::cmdTopic(Server& server, Client& client, const std::vector<
         return;
     }
 
-    // Set topic
     if (channel->isTopicRestricted() && !channel->hasOperator(client.nickname())) {
         throw IrcReplies(ERR_CHANOPRIVSNEEDED, channelName);
     }
@@ -167,7 +150,6 @@ void CommandManager::cmdTopic(Server& server, Client& client, const std::vector<
     channel->topicSetter(client.nickname());
     channel->topicSetTime(std::time(NULL));
 
-    // Broadcast topic change
     std::string topicMsg = ":" + client.fullmask() + " TOPIC " + channelName + " :" + newTopic + "\r\n";
     std::map<int, Client*>& clients = server.clients();
     for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -185,7 +167,6 @@ void CommandManager::cmdNames(Server& server, Client& client, const std::vector<
     }
 
     if (channelName.empty()) {
-        // List all channels (simplified)
         std::string endMsg = ":" + server.name() + " 366 " + client.nickname() + " * :End of NAMES list\r\n";
         client.appendToWriteBuffer(endMsg);
         server.handleClientWrite(client);
@@ -197,7 +178,6 @@ void CommandManager::cmdNames(Server& server, Client& client, const std::vector<
         throw IrcReplies(ERR_NOSUCHCHANNEL, channelName);
     }
 
-    // Build names list
     std::string namesList;
     std::map<int, Client*>& clients = server.clients();
     for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -212,13 +192,11 @@ void CommandManager::cmdNames(Server& server, Client& client, const std::vector<
         }
     }
 
-    // Send names reply
     std::string namesMsg = ":" + server.name() + " 353 " + client.nickname() + 
                            " = " + channelName + " :" + namesList + "\r\n";
     client.appendToWriteBuffer(namesMsg);
     server.handleClientWrite(client);
 
-    // Send end of names
     std::string endMsg = ":" + server.name() + " 366 " + client.nickname() + 
                          " " + channelName + " :End of NAMES list\r\n";
     client.appendToWriteBuffer(endMsg);
