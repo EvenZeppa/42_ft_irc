@@ -9,6 +9,9 @@ CommandManager::CommandManager() {
     _commands["USER"] = CommandEntry(CommandManager::cmdUser, false, 4);
     _commands["CAP"]  = CommandEntry(CommandManager::cmdCap, false, 1);
     _commands["QUIT"] = CommandEntry(CommandManager::cmdQuit, false, 0);
+    _commands["PING"] = CommandEntry(CommandManager::cmdPing, false, 1);
+    _commands["PONG"] = CommandEntry(CommandManager::cmdPong, false, 1);
+    _commands["WHO"]  = CommandEntry(CommandManager::cmdWho, true, 0);
 
     _commands["JOIN"] = CommandEntry(CommandManager::cmdJoin, true, 1);
     _commands["PART"] = CommandEntry(CommandManager::cmdPart, true, 1);
@@ -43,6 +46,7 @@ void CommandManager::executeCommand(Server& server, Client& client, std::string 
     } catch (const IrcReplies& reply) {
         std::string replyMsg = _buildReply(server, reply.Code(), reply.Arg(), "");
         client.appendToWriteBuffer(replyMsg);
+		server.handleClientWrite(client);
     }
 }   
 
@@ -57,7 +61,7 @@ std::string CommandManager::_buildReply(const Server& server, int code, std::str
             msg += ":Welcome to the Internet Relay Network " + arg1;
             break;
         case RPL_UMODEIS:
-            msg += ":Your user mode is " + arg1; // TODO: correction a faire ici
+            msg += ":Your user mode is " + arg1;
             break;
         case RPL_AWAY:
             msg += ":You are marked as away";
@@ -72,13 +76,13 @@ std::string CommandManager::_buildReply(const Server& server, int code, std::str
             msg += arg1 + " : " + arg2;
             break;
         case RPL_WHOISUSER:
-            msg += arg1 + " " + arg2 + " :is a user"; // TODO: correction a faire ici
+            msg += arg1 + " " + arg2 + " :is a user";
             break;
         case RPL_ENDOFWHO:
             msg += arg1 + " :End of WHO list";
             break;
         case RPL_NAMREPLY:
-            msg += "= " + arg1 + " :User list"; // TODO: correction a faire ici
+            msg += "= " + arg1 + " :User list";
             break;
         case RPL_INVITING:
             msg += arg1 + arg2;

@@ -28,7 +28,6 @@ Channel::Channel(const std::string& name) :
 
 Channel::~Channel() {}
 
-// Getters
 std::string Channel::name() const { return _name; }
 std::string Channel::topic() const { return _topic; }
 std::string Channel::topicSetter() const { return _topicSetter; }
@@ -36,7 +35,6 @@ time_t Channel::topicSetTime() const { return _topicSetTime; }
 std::string Channel::key() const { return _key; }
 size_t Channel::limit() const { return _limit; }
 
-// Setters
 Channel& Channel::name(const std::string& name) { _name = name; return *this; }
 Channel& Channel::topic(const std::string& topic) { _topic = topic; return *this; }
 Channel& Channel::topicSetter(const std::string& topicSetter) { _topicSetter = topicSetter; return *this; }
@@ -44,7 +42,6 @@ Channel& Channel::topicSetTime(time_t topicSetTime) { _topicSetTime = topicSetTi
 Channel& Channel::key(const std::string& key) { _key = key; return *this; }
 Channel& Channel::limit(size_t limit) { _limit = limit; return *this; }
 
-// Mode operations
 void Channel::addMode(char mode) { _modes.insert(mode); }
 void Channel::removeMode(char mode) {
 	if (mode == 'k') _key = "";
@@ -60,21 +57,18 @@ bool Channel::isTopicRestricted() const { return hasMode('t'); }
 bool Channel::isKeyMode() const { return hasMode('k'); }
 bool Channel::isLimitMode() const { return hasMode('l'); }
 
-// Members operations
 void Channel::addMember(const std::string& nickname) { _members.insert(nickname); }
 void Channel::removeMember(const std::string& nickname) { _members.erase(nickname); }
 bool Channel::hasMember(const std::string& nickname) const {
 	return _members.find(nickname) != _members.end();
 }
 
-// Operators operations
 void Channel::addOperator(const std::string& nickname) { _operators.insert(nickname); }
 void Channel::removeOperator(const std::string& nickname) { _operators.erase(nickname); }
 bool Channel::hasOperator(const std::string& nickname) const {
 	return _operators.find(nickname) != _operators.end();
 }
 
-// Invited operations
 void Channel::addInvited(const std::string& nickname) { _invited.insert(nickname); }
 void Channel::removeInvited(const std::string& nickname) { _invited.erase(nickname); }
 bool Channel::hasInvited(const std::string& nickname) const {

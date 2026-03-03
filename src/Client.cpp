@@ -44,7 +44,6 @@ Client::~Client() {
 		::close(_fd);
 }
 
-// Getters
 std::string Client::realname() const { return _realname; }
 std::string Client::username() const { return _username; }
 std::string Client::nickname() const { return _nickname; }
@@ -59,7 +58,6 @@ bool Client::isRegistered() const { return _isRegistered; }
 time_t Client::lastPing() const { return _lastPing; }
 time_t Client::lastPong() const { return _lastPong; }
 
-// Setters
 Client& Client::realname(const std::string& realname) { _realname = realname; return *this; }
 Client& Client::username(const std::string& username) { _username = username; return *this; }
 Client& Client::nickname(const std::string& nickname) { _nickname = nickname; return *this; }
@@ -73,14 +71,12 @@ Client& Client::registered(bool status) { _isRegistered = status; return *this; 
 Client& Client::lastPing(time_t timestamp) { _lastPing = timestamp; return *this; }
 Client& Client::lastPong(time_t timestamp) { _lastPong = timestamp; return *this; }
 
-// Mode operations
 void Client::addMode(char mode) { _modes.insert(mode); }
 void Client::removeMode(char mode) { _modes.erase(mode); }
 bool Client::hasMode(char mode) const {
 	return _modes.find(mode) != _modes.end();
 }
 
-// Buffer operations
 std::string& Client::readBuffer() { return _readBuffer; }
 const std::string& Client::readBuffer() const { return _readBuffer; }
 void Client::appendToReadBuffer(const std::string& data) { _readBuffer += data; }
@@ -92,7 +88,6 @@ const std::string& Client::writeBuffer() const { return _writeBuffer; }
 void Client::appendToWriteBuffer(const std::string& data) { _writeBuffer += data; }
 void Client::clearWriteBuffer() { _writeBuffer.clear(); }
 
-// Channels operations
 void Client::joinChannel(const std::string& channelName) { _channels.insert(channelName); }
 void Client::leaveChannel(const std::string& channelName) { _channels.erase(channelName); }
 bool Client::isInChannel(const std::string& channelName) const {
