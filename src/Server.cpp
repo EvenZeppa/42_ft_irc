@@ -8,18 +8,285 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <cerrno>
+#include <sstream>
+#include <cctype>
+
+#include "../include/Logger.hpp"
+
+namespace {
+/** @brief Convert a string to lowercase. @param input Source string. @return Lowercase copy. */
+std::string toLowerCopy(const std::string& input) {
+	std::string out = input;
+	for (size_t i = 0; i < out.size(); ++i) {
+		out[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(out[i])));
+	}
+	return out;
+}
+
+/** @brief Parse log category token. @param token User token. @param type Output category when successful. @return True on success. */
+bool parseLogType(const std::string& token, Logger::Type& type) {
+	std::string t = toLowerCopy(token);
+	if (t == "in") {
+		type = Logger::IN;
+		return true;
+	}
+	if (t == "out") {
+		type = Logger::OUT;
+		return true;
+	}
+	if (t == "info") {
+		type = Logger::INFO;
+		return true;
+	}
+	if (t == "error") {
+		type = Logger::ERROR;
+		return true;
+	}
+	return false;
+}
+
+/** @brief Print current logger filter status to the console. */
+void printLogStatus() {
+	std::cout << "\033[33m[Console] " << Logger::enabledSummary() << "\033[0m" << std::endl;
+}
+
+/** @brief Print available interactive console commands. */
+void printConsoleHelp() {
+	std::cout << "\n=== ft_irc console help ===" << std::endl;
+	std::cout << "  help                     Show this help" << std::endl;
+	std::cout << "  quit                     Stop server cleanly" << std::endl;
+	std::cout << "  clear                    Clear terminal" << std::endl;
+	std::cout << "  clients                  List connected clients" << std::endl;
+	std::cout << "  channels                 List existing channels" << std::endl;
+	std::cout << "  client <fd|nick>         Show client details" << std::endl;
+	std::cout << "  log show                 Show log filters" << std::endl;
+	std::cout << "  log all                  Enable all log types" << std::endl;
+	std::cout << "  log none                 Disable all log types" << std::endl;
+	std::cout << "  log <in|out|info|error> <on|off|toggle>" << std::endl;
+	std::cout << "===========================\n" << std::endl;
+}
+
+/** @brief Find a client by nickname. @param server Server context. @param nickname Nickname to search. @return Client pointer or NULL. */
+Client* findClientByNick(Server& server, const std::string& nickname) {
+	std::map<int, Client*>& clients = server.clients();
+	for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+		if (it->second && it->second->nickname() == nickname) {
+			return it->second;
+		}
+	}
+	return NULL;
+}
+
+/** @brief Print one client summary line. @param server Server context. @param client Client to print. */
+void printClientInfo(Server& server, Client& client) {
+	std::cout << "[Client] FD=" << client.fd();
+	if (!client.nickname().empty()) {
+		std::cout << " NICK=" << client.nickname();
+	}
+	if (!client.username().empty()) {
+		std::cout << " USER=" << client.username();
+	}
+	if (!client.hostname().empty()) {
+		std::cout << " HOST=" << client.hostname();
+	}
+	std::cout << " REGISTERED=" << (client.isRegistered() ? "YES" : "NO");
+
+	std::string channelList;
+	std::map<std::string, Channel*>& channels = server.channels();
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
+		if (it->second && client.isInChannel(it->first)) {
+			if (!channelList.empty()) {
+				channelList += ",";
+			}
+			channelList += it->first;
+		}
+	}
+	if (!channelList.empty()) {
+		std::cout << " CHANNELS=" << channelList;
+	}
+	std::cout << std::endl;
+}
+
+/** @brief Print all connected clients. @param server Server context. */
+void printClients(Server& server) {
+	std::map<int, Client*>& clients = server.clients();
+	if (clients.empty()) {
+		std::cout << "[Console] No connected clients" << std::endl;
+		return;
+	}
+	std::cout << "[Console] Clients:" << std::endl;
+	for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+		if (it->second) {
+			printClientInfo(server, *it->second);
+		}
+	}
+}
+
+/** @brief Print all known channels. @param server Server context. */
+void printChannels(Server& server) {
+	std::map<std::string, Channel*>& channels = server.channels();
+	if (channels.empty()) {
+		std::cout << "[Console] No channels" << std::endl;
+		return;
+	}
+	std::cout << "[Console] Channels:" << std::endl;
+	for (std::map<std::string, Channel*>::iterator it = channels.begin(); it != channels.end(); ++it) {
+		if (!it->second) {
+			continue;
+		}
+		std::cout << "  " << it->first;
+		if (!it->second->topic().empty()) {
+			std::cout << " (topic: " << it->second->topic() << ")";
+		}
+		std::cout << std::endl;
+	}
+}
+
+/** @brief Execute a command entered on server stdin console. @param server Server context. @param line Raw command line. */
+void handleConsoleCommand(Server& server, const std::string& line) {
+	std::istringstream iss(line);
+	std::string cmd;
+	if (!(iss >> cmd)) {
+		return;
+	}
+
+	cmd = toLowerCopy(cmd);
+	if (cmd == "quit") {
+		server.close();
+		return;
+	}
+
+	if (cmd == "clear") {
+		std::cout << "\033[2J\033[H" << std::flush;
+		return;
+	}
+
+	if (cmd == "help") {
+		printConsoleHelp();
+		return;
+	}
+
+	if (cmd == "clients") {
+		printClients(server);
+		return;
+	}
+
+	if (cmd == "channels") {
+		printChannels(server);
+		return;
+	}
+
+	if (cmd == "client") {
+		std::string selector;
+		if (!(iss >> selector)) {
+			std::cout << "[Console] Usage: client <fd|nick>" << std::endl;
+			return;
+		}
+
+		bool isNumber = true;
+		for (size_t i = 0; i < selector.size(); ++i) {
+			if (!std::isdigit(static_cast<unsigned char>(selector[i]))) {
+				isNumber = false;
+				break;
+			}
+		}
+
+		Client* target = NULL;
+		if (isNumber) {
+			std::istringstream ss(selector);
+			int fd = -1;
+			ss >> fd;
+			target = server.getClient(fd);
+		} else {
+			target = findClientByNick(server, selector);
+		}
+
+		if (!target) {
+			std::cout << "[Console] Client not found" << std::endl;
+			return;
+		}
+		printClientInfo(server, *target);
+		return;
+	}
+
+	if (cmd == "log") {
+		std::string arg1;
+		if (!(iss >> arg1)) {
+			printLogStatus();
+			return;
+		}
+
+		arg1 = toLowerCopy(arg1);
+		if (arg1 == "show" || arg1 == "status") {
+			printLogStatus();
+			return;
+		}
+		if (arg1 == "all") {
+			Logger::enableAll();
+			printLogStatus();
+			return;
+		}
+		if (arg1 == "none") {
+			Logger::disableAll();
+			printLogStatus();
+			return;
+		}
+
+		Logger::Type type;
+		if (!parseLogType(arg1, type)) {
+			std::cout << "[Console] Unknown log type: " << arg1 << std::endl;
+			std::cout << "[Console] Use: log <in|out|info|error> <on|off|toggle>" << std::endl;
+			return;
+		}
+
+		std::string arg2;
+		if (!(iss >> arg2)) {
+			Logger::setEnabled(type, !Logger::isEnabled(type));
+			printLogStatus();
+			return;
+		}
+
+		arg2 = toLowerCopy(arg2);
+		if (arg2 == "on") {
+			Logger::setEnabled(type, true);
+		} else if (arg2 == "off") {
+			Logger::setEnabled(type, false);
+		} else if (arg2 == "toggle") {
+			Logger::setEnabled(type, !Logger::isEnabled(type));
+		} else {
+			std::cout << "[Console] Unknown mode: " << arg2 << std::endl;
+			std::cout << "[Console] Use on, off or toggle" << std::endl;
+			return;
+		}
+
+		printLogStatus();
+		return;
+	}
+
+	std::cout << "[Console] Unknown command: " << cmd << std::endl;
+	std::cout << "[Console] Type 'help' for available commands" << std::endl;
+}
+}
 
 Server::Server() :
 	_host("127.0.0.1"),
 	_port("6667"),
 	_pass(""),
-	_name("emptyName") {}
+	_name("emptyName"),
+	_socketfd(-1),
+	_epfd(-1),
+	_running(true),
+	_isClosed(false) {}
 
 Server::Server(const Server& other) :
 	_host(other._host),
 	_port(other._port),
 	_pass(other._pass),
-	_name(other._name) {}
+	_name(other._name),
+	_socketfd(-1),
+	_epfd(-1),
+	_running(true),
+	_isClosed(false) {}
 
 Server& Server::operator=(const Server& other) {
 	_host = other._host;
@@ -30,6 +297,16 @@ Server& Server::operator=(const Server& other) {
 }
 
 Server::~Server() {
+	cleanupResources();
+}
+
+void Server::cleanupResources() {
+	if (_isClosed) {
+		return;
+	}
+	_isClosed = true;
+	_running = false;
+
 	std::map<int, Client*>::iterator it;
 	for (it = _clients.begin(); it != _clients.end(); ++it) {
 		delete it->second;
@@ -44,25 +321,24 @@ Server::~Server() {
 
 	if (_socketfd != -1) {
 		::close(_socketfd);
+		_socketfd = -1;
 	}
 	if (_epfd != -1) {
 		::close(_epfd);
+		_epfd = -1;
 	}
 }
 
-// Getters
 std::string Server::host() const { return _host; }
 std::string Server::port() const { return _port; }
 std::string Server::pass() const { return _pass; }
 std::string Server::name() const { return _name; }
 
-// Setters
 Server& Server::host(const std::string& host) { _host = host; return *this; }
 Server& Server::port(const std::string& port) { _port = port; return *this; }
 Server& Server::pass(const std::string& pass) { _pass = pass; return *this; }
 Server& Server::name(const std::string& name) { _name = name; return *this; }
 
-// Clients operations
 bool Server::addClient(Client* client) {
 	int fd = client->fd();
 	if (hasClient(fd))
@@ -112,7 +388,6 @@ std::map<int, Client*>& Server::clients() const {
 	return const_cast<std::map<int, Client*>&>(_clients);
 }
 
-// Channels operations
 bool Server::addChannel(Channel* channel) {
 	std::string name = channel->name();
 	if (hasChannel(name))
@@ -155,40 +430,45 @@ std::map<std::string, Channel*>& Server::channels() const {
 	return const_cast<std::map<std::string, Channel*>&>(_channels);
 }
 
+/** @brief Define the IRC grammar accepted by the parser. @param grammar Grammar object to configure. */
 void initGrammar(Grammar& grammar) {
-	grammar.addRule("<letter> ::= ( 'a' ... 'z' 'A' ... 'Z' )");
-	grammar.addRule("<number> ::= ( '0' ... '9' )");
-	grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
+    grammar.addRule("<letter> ::= 'a'...'z' | 'A'...'Z'");
+    grammar.addRule("<number> ::= '0'...'9'");
+    grammar.addRule("<special> ::= '-' | '[' | ']' | '\\\\' | '`' | '^' | '{' | '}'");
 
-	grammar.addRule("<nospace> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '} | '~'");
-	grammar.addRule("<safechar> ::= ' ' | '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
-	grammar.addRule("<nospecial> ::= '!' | '\"' | '#' | '$' | '%' | '&' | ''' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | ';' | '<' | '=' | '>' | '?' | '@' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' | '[' | '\' | ']' | '^' | '_' | '`' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | '{' | '|' | '}' | '~'");
-	grammar.addRule("<nonwhite> ::= ( ^ 0x20 0x0 0xD 0xA )");
+    grammar.addRule("<accented> ::= 0xA0...0xFF");
 
-	grammar.addRule("<SPACE> ::= ' ' { ' ' }");
-	grammar.addRule("<crlf> ::= '\r' '\n'");
+    grammar.addRule("<safechar> ::= ' '...'~' | <accented>");
 
-	grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
-	grammar.addRule("<trailing> ::= { <safechar> }");
+    grammar.addRule("<nospace> ::= '!'...'~' | <accented>");
 
-	grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
-	grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
+    grammar.addRule("<nospecial> ::= '!'...'9' | ';'...'~' | <accented>");
 
-	grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
-	grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
+	grammar.addRule("<nonwhite> ::= 0x21...0xFF");
+    grammar.addRule("<SPACE> ::= ' ' { ' ' }");
+    grammar.addRule("<crlf> ::= '\r' '\n'");
 
-	grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
-	grammar.addRule("<hostname-end> ::= <letter> | <number>");
-	grammar.addRule("<servername> ::= <letter> { <hostname-char> } <hostname-end>");
+    grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
+    grammar.addRule("<trailing> ::= { <safechar> }");
 
-	grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <host> ]");
-	grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
+    grammar.addRule("<params> ::= <SPACE> [ ':' <trailing> | <middle> [ <params> ] ]");
+    grammar.addRule("<command> ::= <letter> { <letter> } | <number> <number> <number>");
+
+    grammar.addRule("<nick> ::= <letter> { <letter> | <number> | <special> }");
+    grammar.addRule("<user> ::= <nonwhite> { <nonwhite> }");
+
+    grammar.addRule("<hostname-char> ::= <letter> | <number> | '-'");
+    grammar.addRule("<hostname-end> ::= <letter> | <number>");
+    grammar.addRule("<servername> ::= <letter> { <hostname-char> } [ <hostname-end> ]");
+
+    grammar.addRule("<prefix> ::= <servername> | <nick> [ '!' <user> ] [ '@' <servername> ]");
+    grammar.addRule("<message> ::= [ ':' <prefix> <SPACE> ] <command> <params> <crlf>");
 }
 
 int Server::init() {
 	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketfd == -1) {
-		std::cerr << "Error: Socket init" << std::endl;
+		Logger::log(Logger::ERROR, -1, "Socket init failed");
 		return -1;
 	}
 
@@ -200,7 +480,7 @@ int Server::init() {
 	sin.ai_flags = AI_PASSIVE;
 
 	if (getaddrinfo(NULL, _port.c_str(), &sin, &res)) {
-		std::cerr << "getaddrinfo error" << std::endl;
+		Logger::log(Logger::ERROR, -1, "getaddrinfo failed");
 		return -1;
 	}
 
@@ -224,13 +504,13 @@ int Server::init() {
 	freeaddrinfo(res);
 
 	if (listen(_socketfd, 5) == -1) {
-		std::cerr << "Error: Socket listen" << std::endl;
+		Logger::log(Logger::ERROR, -1, "Socket listen failed");
 		return -1;
 	}
 
 	_epfd = epoll_create1(0);
 	if (_epfd == -1) {
-		std::cerr << "Error: Epoll create" << std::endl;
+		Logger::log(Logger::ERROR, -1, "epoll_create1 failed");
 		return -1;
 	}
 
@@ -239,13 +519,13 @@ int Server::init() {
 	ev.data.fd = STDIN_FILENO;
 
 	if (epoll_ctl(_epfd, EPOLL_CTL_ADD, STDIN_FILENO, &ev) == -1) {
-		std::cerr << "Error: Epoll ctl for quit" << std::endl;
+		Logger::log(Logger::ERROR, -1, "epoll_ctl add STDIN failed");
 		return -1;
 	}
 
 	ev.data.fd = _socketfd;
 	if (epoll_ctl(_epfd, EPOLL_CTL_ADD, _socketfd, &ev)) {
-		std::cerr << "Error: Epoll ctl for listen server" << std::endl;
+		Logger::log(Logger::ERROR, -1, "epoll_ctl add server socket failed");
 		return -1;
 	}
 
@@ -255,9 +535,15 @@ int Server::init() {
 }
 
 void Server::run() {
-	while(true) {
+	while (_running) {
 		struct epoll_event rev[1028];
 		int num_events = epoll_wait(_epfd, rev, 1028, -1);
+		if (num_events < 0) {
+			if (_running) {
+				Logger::log(Logger::ERROR, -1, "epoll_wait failed");
+			}
+			break;
+		}
 		if (num_events > 0)
 			for (int i = 0; i < num_events; ++i) {
 				handle_event(rev[i]);
@@ -267,16 +553,7 @@ void Server::run() {
 
 void Server::close()
 {
-	std::map<int, Client*>::iterator it;
-	for (it = _clients.begin(); it != _clients.end(); ++it) {
-		delete it->second;
-	}
-	_clients.clear();
-
-	if (_socketfd != -1) ::close(_socketfd);
-	if (_epfd != -1) ::close(_epfd);
-
-	::exit(0);
+	cleanupResources();
 }
 
 int Server::handle_event(struct epoll_event ev) {
@@ -289,7 +566,6 @@ int Server::handle_event(struct epoll_event ev) {
 
 			int cfd = accept(fd, (struct sockaddr *)&peer_addr, &peer_addr_size);
 
-			// @TODO : Verifier si on peut l'utiliser pour le client
 			fcntl(cfd, F_SETFL, O_NONBLOCK);
 
 			struct epoll_event nev;
@@ -299,6 +575,7 @@ int Server::handle_event(struct epoll_event ev) {
 
 			Client* newClient = new Client(cfd);
 			newClient->epollServerFd(_epfd);
+			newClient->hostname(_host);
 			if (!addClient(newClient)) {
 				delete newClient;
 				return -1;
@@ -307,7 +584,7 @@ int Server::handle_event(struct epoll_event ev) {
 	} else if (fd == STDIN_FILENO) {
 		std::string line;
 		std::getline(std::cin, line);
-		if (line == "quit") close();
+		handleConsoleCommand(*this, line);
 	} else {
 		std::map<int, Client*>::iterator it = _clients.find(fd);
 		if (it != _clients.end()) {
@@ -334,11 +611,15 @@ int Server::handle_event(struct epoll_event ev) {
 void Server::handleClientWrite(Client& client) {
 	std::string& writeBuffer = client.writeBuffer();
 	if (!writeBuffer.empty()) {
+		Logger::log(Logger::OUT, client.fd(), writeBuffer, client.nickname());
 		ssize_t bytesSent = send(client.fd(), writeBuffer.c_str(), writeBuffer.size(), 0);
 		if (bytesSent > 0) {
+			std::ostringstream oss;
+			oss << "Sent " << bytesSent << " bytes";
+			Logger::log(Logger::INFO, client.fd(), oss.str(), client.nickname());
 			writeBuffer.erase(0, bytesSent);
 		} else if (bytesSent == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-			std::cerr << "Error: Sending data to client fd " << client.fd() << std::endl;
+			Logger::log(Logger::ERROR, client.fd(), "send() failed", client.nickname());
 			client.fd(-1);
 		}
 	}
@@ -350,43 +631,66 @@ void Server::handleClientRead(Client& client) {
 	if (bytesRead > 0) {
 		buffer[bytesRead] = '\0';
 		client.appendToReadBuffer(std::string(buffer));
-		// Parse commands
+		Logger::log(Logger::IN, client.fd(), std::string(buffer), client.nickname());
 
-		BNFParser parser(_grammar);
+		while (!client.readBuffer().empty()) {
+			BNFParser parser(_grammar);
 
-		size_t consumed = 0;
-		ASTNode* ast = parser.parse("<message>", client.readBuffer(), consumed);
-		if (ast) {
-			DataExtractor extractor;
-			ExtractedData data = extractor.extract(ast);
+			size_t consumed = 0;
+			ASTNode* ast = parser.parse("<message>", client.readBuffer(), consumed);
+			if (ast) {
+				DataExtractor extractor;
+				ExtractedData data = extractor.extract(ast);
 
-			if (data.has("<command>")) {
-				std::string command;
-				std::vector<std::string> middles;
-				std::string trailing;
+				if (data.has("<command>")) {
+					std::string command;
+					std::vector<std::string> middles;
+					std::string trailing;
 
-				command = data.first("<command>");
-				if (data.has("<middle>"))
-					middles = data.all("<middle>");
-				if (data.has("<trailing>")) {
-					trailing = data.first("<trailing>");
-					middles.push_back(trailing);
+					command = data.first("<command>");
+					if (data.has("<middle>"))
+						middles = data.all("<middle>");
+					if (data.has("<trailing>")) {
+						trailing = data.first("<trailing>");
+						middles.push_back(trailing);
+					}
+
+					std::string parseMsg = "Command: " + command;
+					if (!middles.empty()) {
+						parseMsg += " Args:";
+						for (std::vector<std::string>::iterator it = middles.begin(); it != middles.end(); ++it) {
+							parseMsg += " [" + *it + "]";
+						}
+					}
+					Logger::log(Logger::INFO, client.fd(), parseMsg, client.nickname());
+
+					CommandManager cm;
+					cm.executeCommand(*this, client, command, middles);
+
+					client.subToReadBuffer(consumed);
+					
+					delete ast;
+				} else {
+					Logger::log(Logger::ERROR, client.fd(), "Parse failed (no command)", client.nickname());
+					delete ast;
+					break;
 				}
-
-				CommandManager cm;
-
-				cm.executeCommand(*this, client, command, middles);
-
-				client.subToReadBuffer(consumed);
+			} else {
+				if (!client.readBuffer().empty()) {
+					Logger::log(Logger::INFO, client.fd(), "Incomplete message in buffer, waiting for more data", client.nickname());
+				}
+				break;
 			}
 		}
 
-		std::cout << client.readBuffer() << std::endl;
+		if (!client.readBuffer().empty()) {
+			Logger::log(Logger::INFO, client.fd(), "Buffer remaining: " + client.readBuffer(), client.nickname());
+		}
 	} else if (bytesRead == 0) {
-		std::cout << "Client fd " << client.fd() << " disconnected." << std::endl;
+		Logger::log(Logger::INFO, client.fd(), "Client disconnected", client.nickname());
 		client.fd(-1);
 	} else if (bytesRead == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-		std::cerr << "Error: Receiving data from client fd " << client.fd() << std::endl;
+		Logger::log(Logger::ERROR, client.fd(), "recv() failed", client.nickname());
 		client.fd(-1);
 	}
 }

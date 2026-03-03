@@ -19,7 +19,7 @@ include(CheckCXXCompilerFlag)
 set(CXX_WARN_FLAGS
     -Wall
     -Wextra
-    # -Werror
+    -Werror
 )
 
 foreach(flag IN LISTS CXX_WARN_FLAGS)
@@ -40,7 +40,6 @@ file(GLOB_RECURSE SRC_FILES
 add_executable(ircserv ${SRC_FILES})
 
 set(BNFPARSER_BUILD_EXAMPLES OFF CACHE BOOL "Disable BNFParser examples" FORCE)
-set(BNFPARSER_BUILD_TESTS OFF CACHE BOOL "Disable BNFParser tests" FORCE)
 add_subdirectory(third_party/BNFParserLib EXCLUDE_FROM_ALL)
 target_link_libraries(ircserv PRIVATE bnf)
 
@@ -57,36 +56,10 @@ target_include_directories(ircserv
     ${PROJECT_SOURCE_DIR}/third_party/BNFParserLib/include
 )
 
-# Tests
-file(GLOB_RECURSE TEST_FILES
-    test/*.cpp
-)
-
-set(TEST_SRC_FILES ${SRC_FILES})
-list(FILTER TEST_SRC_FILES EXCLUDE REGEX "src/main\\.cpp$")
-
-add_executable(test_runner EXCLUDE_FROM_ALL ${TEST_FILES} ${TEST_SRC_FILES})
-target_link_libraries(test_runner PRIVATE bnf)
-if(APPLE)
-    target_link_libraries(test_runner PRIVATE epoll-shim)
-    target_compile_definitions(test_runner PRIVATE EPOLL_SHIM_DISABLE_WRAPPER_MACROS)
-endif()
-
-target_include_directories(test_runner
-    PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/third_party/BNFParserLib/include
-)
-
-# Build tests only when explicitly requested.
-add_custom_target(test DEPENDS test_runner)
-
 # Remove executables even for in-source builds.
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
     ${CMAKE_BINARY_DIR}/ircserv
-    ${CMAKE_BINARY_DIR}/test_runner
     ${PROJECT_SOURCE_DIR}/ircserv
-    ${PROJECT_SOURCE_DIR}/test_runner
 )
 
 # Remove CMake-generated build artifacts (like make fclean)
@@ -97,6 +70,7 @@ add_custom_target(fclean
         ${CMAKE_BINARY_DIR}/CMakeCache.txt
         ${CMAKE_BINARY_DIR}/cmake_install.cmake
         ${CMAKE_BINARY_DIR}/Makefile
+        ${CMAKE_BINARY_DIR}/tests
         ${PROJECT_SOURCE_DIR}/build
 )
 
