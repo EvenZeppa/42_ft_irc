@@ -55,14 +55,14 @@ print_header() {
 
 print_success() {
     echo -e "${GREEN}✓${RESET} $1"
-    ((PASSED_TESTS++))
-    ((TOTAL_TESTS++))
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
 }
 
 print_fail() {
     echo -e "${RED}✗${RESET} $1"
-    ((FAILED_TESTS++))
-    ((TOTAL_TESTS++))
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
 }
 
 print_info() {
@@ -399,7 +399,13 @@ test_multiline_messages() {
     { echo -e "PASS $SERVER_PASSWORD\r\nNICK User3\r\nUSER user3 0 * :User Three\r\nJOIN #multi"; sleep 2; } | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
     
     sleep 3
-    print_success "Multiple clients handled without blocking"
+    
+    # If we get here, the server didn't crash/block
+    if kill -0 "$SERVER_PID" 2>/dev/null; then
+        print_success "Multiple clients handled without blocking"
+    else
+        print_fail "Server crashed with multiple clients"
+    fi
     
     echo ""
 }
