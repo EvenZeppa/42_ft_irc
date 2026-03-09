@@ -147,7 +147,9 @@ Run the server with the following syntax:
 
 ### Connexion avec un Client IRC
 
-#### 1. Avec **irssi** (recommandé pour les tests)
+Le client de référence pour ce projet est **irssi** (utilisé lors de la correction 42).
+
+#### Avec **irssi**
 ```bash
 irssi
 ```
@@ -158,19 +160,9 @@ Puis dans irssi:
 /join #salon
 ```
 
-#### 2. Avec **WeeChat**
-```bash
-weechat
-```
-Puis dans WeeChat:
-```irc
-/server add ftirctest 127.0.0.1/6667 -password=motdepasse123
-/connect ftirctest
-/nick VotrePseudo
-/join #salon
-```
+Voir `MANUAL_TESTS.md` pour le guide complet de tests manuels avec irssi.
 
-#### 3. Avec **nc/telnet** (tests basiques)
+#### Avec **nc** (tests protocolaires bruts)
 ```bash
 nc 127.0.0.1 6667
 ```
@@ -183,12 +175,7 @@ JOIN #salon
 PRIVMSG #salon :Bonjour tout le monde!
 ```
 
-#### 4. Avec **Hexchat** (interface graphique)
-1. Ouvrir HexChat
-2. Ajouter un réseau "ft_irc"
-3. Configurer: `127.0.0.1`, port `6667`
-4. Définir le mot de passe du serveur
-5. Se connecter
+> Le serveur est compatible avec tout client IRC conforme RFC 1459 (WeeChat, HexChat, etc.).
 
 ## 🎮 Console de Gestion du Serveur
 
@@ -441,11 +428,9 @@ Ce projet permet d'apprendre:
 - [RFC 2812 - IRC Client Protocol](https://tools.ietf.org/html/rfc2812) - Updated IRC client protocol
 - [Modern IRC Documentation](https://modern.ircdocs.horse/) - Contemporary IRC documentation
 
-### IRC Clients for Testing
-- **irssi**: Lightweight terminal-based IRC client
-- **WeeChat**: Advanced terminal IRC client
-- **HexChat**: Cross-platform graphical IRC client
-- **nc (netcat)**: For low-level protocol testing
+### IRC Client de Référence
+- **irssi**: Client IRC terminal utilisé pour la correction 42
+- **nc (netcat)**: Pour les tests automatisés du protocole brut
 
 ### C++ and Network Programming
 - [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/) - TCP/IP sockets tutorial
