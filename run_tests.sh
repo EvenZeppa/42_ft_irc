@@ -37,6 +37,7 @@ SERVER_HOST="127.0.0.1"
 SERVER_EXECUTABLE="./ircserv"
 SERVER_PID=""
 TIMEOUT=5
+NC_QUIT_DELAY=2
 VERBOSE=0
 SERVER_ONLY=0
 
@@ -102,7 +103,7 @@ check_prerequisites() {
     print_success "netcat (nc) available"
     
     # Check port is not in use
-    if nc -z $SERVER_HOST $SERVER_PORT 2>/dev/null; then
+    if nc -z -w 1 $SERVER_HOST $SERVER_PORT 2>/dev/null; then
         print_warning "Port $SERVER_PORT already in use"
         print_info "Waiting for it to be released..."
         sleep 2
@@ -139,7 +140,7 @@ start_server() {
     fi
     
     # Test connection
-    if ! nc -w1 $SERVER_HOST $SERVER_PORT </dev/null &>/dev/null; then
+    if ! nc -z -w 2 $SERVER_HOST $SERVER_PORT 2>/dev/null; then
         print_fail "Server is not accepting connections"
         kill "$SERVER_PID" 2>/dev/null || true
         exit 1
@@ -166,12 +167,12 @@ stop_server() {
 
 send_command() {
     local cmd="$1"
-    (echo -e "$cmd"; sleep 0.5) | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT 2>/dev/null
+    (echo -e "$cmd"; sleep 1) | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT 2>/dev/null
 }
 
 send_commands() {
     local commands="$1"
-    (echo -e "$commands"; sleep 0.5) | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT 2>/dev/null
+    (echo -e "$commands"; sleep 1) | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT 2>/dev/null
 }
 
 test_response() {
@@ -289,24 +290,32 @@ test_messaging() {
 }
 
 test_partial_data() {
-    print_header "Partial Data Handling (nc -C test)"
+    print_header "Partial Data Handling"
     
     # This tests the requirement from subject: handling partial commands
+    # Send PASS in fragments, then complete registration
     print_test "Receiving fragmented command"
     
-    # Send command in parts: "PASS" then "word" then "test\r\n"
-    local response=$( { 
-        echo -n "PAS";
-        sleep 0.1;
-        echo -n "S test";
-        sleep 0.1;
-        echo "word"
-    } | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT 2>/dev/null)
+    local response=$( {
+        printf "PAS";
+        sleep 0.2;
+        printf "S $SERVER_PASSWORD\r\n";
+        sleep 0.2;
+        printf "NICK Frag";
+        sleep 0.2;
+        printf "mented\r\n";
+        sleep 0.2;
+        printf "USER frag 0 * :Frag User\r\n";
+        sleep 1;
+    } | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT 2>/dev/null)
     
-    if [ -n "$response" ]; then
-        print_success "Server handles fragmented data"
+    if echo "$response" | grep -q "001"; then
+        print_success "Server handles fragmented data and registers client"
     else
         print_fail "Server should handle fragmented data"
+        if [ $VERBOSE -eq 1 ]; then
+            echo "Response: $response"
+        fi
     fi
     
     echo ""
@@ -375,8 +384,8 @@ test_error_handling() {
     # Test 2: NICK collision detection
     print_test "NICK already in use detection"
     # First client takes the nick
-    { echo -e "PASS $SERVER_PASSWORD\r\nNICK Kate\r\nUSER kate 0 * :Kate"; sleep 1; } | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
-    sleep 0.5
+    { echo -e "PASS $SERVER_PASSWORD\r\nNICK Kate\r\nUSER kate 0 * :Kate"; sleep 3; } | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
+    sleep 1
     # Second client tries same nick
     local response=$(send_commands "PASS $SERVER_PASSWORD\r\nNICK Kate\r\nUSER kate2 0 * :Kate2")
     if echo "$response" | grep -q "433"; then
@@ -394,9 +403,9 @@ test_multiline_messages() {
     print_test "Multiple simultaneous connections"
     
     # Start multiple clients
-    { echo -e "PASS $SERVER_PASSWORD\r\nNICK User1\r\nUSER user1 0 * :User One\r\nJOIN #multi"; sleep 2; } | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
-    { echo -e "PASS $SERVER_PASSWORD\r\nNICK User2\r\nUSER user2 0 * :User Two\r\nJOIN #multi"; sleep 2; } | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
-    { echo -e "PASS $SERVER_PASSWORD\r\nNICK User3\r\nUSER user3 0 * :User Three\r\nJOIN #multi"; sleep 2; } | nc -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
+    { echo -e "PASS $SERVER_PASSWORD\r\nNICK User1\r\nUSER user1 0 * :User One\r\nJOIN #multi"; sleep 3; } | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
+    { echo -e "PASS $SERVER_PASSWORD\r\nNICK User2\r\nUSER user2 0 * :User Two\r\nJOIN #multi"; sleep 3; } | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
+    { echo -e "PASS $SERVER_PASSWORD\r\nNICK User3\r\nUSER user3 0 * :User Three\r\nJOIN #multi"; sleep 3; } | nc -q $NC_QUIT_DELAY -w $TIMEOUT $SERVER_HOST $SERVER_PORT >/dev/null 2>&1 &
     
     sleep 3
     
