@@ -100,5 +100,7 @@ public:
     static void cmdInvite(Server& server, Client& client, const std::vector<std::string>& args);
     /** @brief Handle PRIVMSG command. @param server Server context. @param client Requesting client. @param args Command arguments. */
     static void cmdPrivmsg(Server& server, Client& client, const std::vector<std::string>& args);
+    /** @brief Handle NOTICE command (DCC/CTCP file transfer). @param server Server context. @param client Requesting client. @param args Command arguments. */
+    static void cmdNotice(Server& server, Client& client, const std::vector<std::string>& args);
 
 };

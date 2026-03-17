@@ -38,6 +38,7 @@ The goal of this project is to learn network programming with TCP/IP sockets, no
 
 **Messaging**
 - `PRIVMSG` — Send messages to users or channels
+- `NOTICE` — Send messages without auto-reply (DCC/CTCP file transfer)
 
 **Utilities**
 - `PING/PONG` — Connection keepalive
@@ -63,6 +64,7 @@ ft_irc/
 │   ├── network/
 │   │   └── IrcReplies.hpp# IRC numeric reply codes
 │   └── bnf/              # BNF Parser headers
+├── MANUAL_TESTS.md       # Manual testing guide (irssi, nc, bot)
 ├── src/                  # Implementation
 │   ├── main.cpp          # Entry point
 │   ├── Server.cpp        # Server logic (epoll loop, client handling)
@@ -74,9 +76,11 @@ ft_irc/
 │   │   ├── cmd_channel.cpp   # JOIN, PART, TOPIC, NAMES
 │   │   ├── cmd_mode.cpp      # MODE (user and channel)
 │   │   ├── cmd_ops.cpp       # KICK, INVITE
-│   │   └── cmd_privmsg.cpp   # PRIVMSG
+│   │   ├── cmd_privmsg.cpp   # PRIVMSG
+│   │   └── cmd_notice.cpp    # NOTICE (DCC/CTCP)
+│   ├── bot.cpp           # Bonus: IRC bot
 │   └── bnf/              # BNF Parser sources
-└── Makefile              # Build rules (all, clean, fclean, re)
+└── Makefile              # Build rules (ircserv, ircbot, all, clean, fclean, re)
 ```
 
 ---
@@ -86,9 +90,9 @@ ft_irc/
 ### Compilation
 
 ```bash
-make        # Build the project
+make        # Build ircserv and ircbot
 make clean  # Remove object files
-make fclean # Remove object files and executable
+make fclean # Remove object files and executables
 make re     # Full rebuild
 ```
 
@@ -160,13 +164,24 @@ The server provides an interactive console for monitoring and management:
 | `log all` / `log none` | Enable / disable all log types |
 | `log <type> <on\|off\|toggle>` | Toggle a specific log type (in, out, info, error) |
 
-### Automated Tests
+### Manual Testing
+
+See `MANUAL_TESTS.md` for a complete testing guide with irssi, nc, and the bonus bot.
+
+### Bonus: IRC Bot
+
+A simple bot that connects to the server and sends a random message every 10 seconds:
 
 ```bash
-./run_tests.sh      # Run all tests
-./run_tests.sh -v   # Verbose output
-./run_tests.sh -s   # Start server only (for manual testing)
+./ircbot <host> <port> <password> [channel]
 ```
+
+- `channel` defaults to `#bot` if omitted
+- Example: `./ircbot 127.0.0.1 6667 mypassword #general`
+
+### Bonus: File Transfer (DCC/CTCP)
+
+The server supports DCC file transfer by forwarding `PRIVMSG` and `NOTICE` messages as-is. CTCP messages (including `DCC SEND`) are transmitted without modification. Use a reference IRC client (irssi, WeeChat, HexChat) that supports DCC to transfer files between clients.
 
 ---
 
@@ -188,9 +203,9 @@ The server provides an interactive console for monitoring and management:
 
 AI (GitHub Copilot) was used as a productivity tool for the following tasks:
 
-- **Documentation**: README, test documentation, and project analysis
+- **Documentation**: README, MANUAL_TESTS.md, and project analysis
 - **Code review**: Identifying potential issues and suggesting structural improvements
-- **Test scenarios**: Brainstorming edge cases and writing the automated test script
+- **Test scenarios**: Brainstorming edge cases and manual test guide
 - **Error formatting**: IRC numeric reply messages and error handling patterns
 
 The following parts were developed **without AI assistance**:

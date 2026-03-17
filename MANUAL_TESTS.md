@@ -1,18 +1,18 @@
-# IRSSI Manual Test Guide (ft_irc)
+# Guide de tests manuels (ft_irc)
 
-Ce document sert à tester manuellement l'ensemble des fonctionnalités du serveur avec **IRSSI**.
+Ce document décrit comment tester manuellement le serveur avec **irssi**, **nc** et le **bot bonus**.
 
 ## 1) Prérequis
 
-- Être dans le dossier du projet.
-- Avoir `irssi` installé.
-- Compiler le serveur.
+- Être dans le dossier du projet
+- Avoir `irssi` installé (pour les tests complets)
+- Compiler le projet
 
 ```bash
 make
 ```
 
-Lancement du serveur (ordre demandé: `port` puis `password`):
+Lancement du serveur :
 
 ```bash
 ./ircserv 6667 superpass
@@ -48,6 +48,28 @@ Déconnexion:
 
 ---
 
+## 2b) Tests avec nc (protocole brut)
+
+Pour tester avec `nc` (comme lors de l'évaluation) :
+
+```bash
+nc 127.0.0.1 6667
+```
+
+Puis taper les commandes (chaque ligne terminée par Entrée) :
+
+```text
+PASS superpass
+NICK bob
+USER bob 0 * :Bob User
+JOIN #test
+PRIVMSG #test :Hello from nc
+```
+
+> **Note :** Utiliser `nc -C` si disponible pour envoyer des lignes en CRLF (`\r\n`), requis par le protocole IRC.
+
+---
+
 ## 3) Tests simples (commande par commande)
 
 Ces tests couvrent les commandes implémentées côté serveur:
@@ -56,7 +78,7 @@ Ces tests couvrent les commandes implémentées côté serveur:
 - `JOIN`, `PART`, `TOPIC`, `NAMES`
 - `MODE` (user `+i`, channel `+i/+t/+k/+l/+o`)
 - `KICK`, `INVITE`
-- `PRIVMSG`
+- `PRIVMSG`, `NOTICE`
 
 ### A. NICK
 
@@ -149,6 +171,15 @@ Message privé:
 Attendu:
 - Sur channel: tous les membres sauf l'émetteur reçoivent.
 - En privé: seul le destinataire reçoit.
+
+### F. Transfert d'opérateur (PART/QUIT/KICK)
+
+Quand le dernier op quitte un channel, le premier membre restant devient op automatiquement :
+
+1. `alice` crée `#transfer` et devient op
+2. `bob` rejoint
+3. `alice` quitte : `/part #transfer`
+4. Vérifier : `bob` doit être promu op (message `MODE #transfer +o bob`)
 
 ---
 
@@ -269,7 +300,19 @@ Le test est validé si:
 
 ---
 
-## 7) Astuces utiles IRSSI
+## 7) Bonus : Bot IRC
+
+Dans un terminal séparé, lancer le bot :
+
+```bash
+./ircbot 127.0.0.1 6667 superpass #test
+```
+
+Le bot rejoint `#test` et envoie un message aléatoire toutes les 10 secondes. Rejoindre le même channel avec irssi ou nc pour voir les messages.
+
+---
+
+## 8) Astuces utiles IRSSI
 
 - Changer de salon/fenêtre: `Alt` + numéro (ou `/window goto <n>`)
 - Afficher fenêtres: `/window list`

@@ -36,6 +36,7 @@ CommandManager::CommandManager() {
     _commands["INVITE"] = CommandEntry(CommandManager::cmdInvite, true, 2);
 
     _commands["PRIVMSG"] = CommandEntry(CommandManager::cmdPrivmsg, true, 2);
+    _commands["NOTICE"]  = CommandEntry(CommandManager::cmdNotice, true, 2);
 }
 
 void CommandManager::executeCommand(Server& server, Client& client, std::string cmdName, std::vector<std::string> args) {

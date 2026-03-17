@@ -4,6 +4,7 @@ lib/
 
 # Binaries
 /ircserv
+/ircbot
 /test_runner
 
 # Test outputs

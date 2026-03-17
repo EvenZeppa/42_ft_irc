@@ -13,6 +13,7 @@
 # ================================ VARIABLES ================================= #
 
 NAME		= ircserv
+BOT_NAME	= ircbot
 
 CXX			= c++
 CXXFLAGS	= -Wall -Wextra -Werror -std=c++98
@@ -34,6 +35,7 @@ SRCS		= src/main.cpp \
 			  src/commands/cmd_mode.cpp \
 			  src/commands/cmd_ops.cpp \
 			  src/commands/cmd_privmsg.cpp \
+			  src/commands/cmd_notice.cpp \
 			  src/bnf/AST.cpp \
 			  src/bnf/Arena.cpp \
 			  src/bnf/BNFParser.cpp \
@@ -45,6 +47,7 @@ SRCS		= src/main.cpp \
 			  src/bnf/Grammar.cpp
 
 OBJS		= $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+BOT_OBJ		= $(OBJ_DIR)/bot.o
 
 # ================================== COLORS ================================== #
 
@@ -57,12 +60,17 @@ RESET		= \033[0m
 
 # =================================== RULES ================================== #
 
-all: $(NAME)
+all: $(NAME) $(BOT_NAME)
 
 $(NAME): $(OBJS)
 	@echo "$(CYAN)Linking $(NAME)...$(RESET)"
 	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully$(RESET)"
+
+$(BOT_NAME): $(BOT_OBJ)
+	@echo "$(CYAN)Linking $(BOT_NAME)...$(RESET)"
+	@$(CXX) $(CXXFLAGS) $(BOT_OBJ) -o $(BOT_NAME)
+	@echo "$(GREEN)$(BOT_NAME) compiled successfully$(RESET)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(dir $@)
@@ -75,8 +83,8 @@ clean:
 	@echo "$(GREEN)Clean completed$(RESET)"
 
 fclean: clean
-	@echo "$(RED)Removing $(NAME)...$(RESET)"
-	@rm -f $(NAME)
+	@echo "$(RED)Removing $(NAME) and $(BOT_NAME)...$(RESET)"
+	@rm -f $(NAME) $(BOT_NAME)
 	@echo "$(GREEN)Full clean completed$(RESET)"
 
 re: fclean all
