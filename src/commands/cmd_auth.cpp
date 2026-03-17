@@ -218,6 +218,7 @@ void CommandManager::cmdQuit(Server& server, Client& client, const std::vector<s
 
         channel->removeMember(client.nickname());
         channel->removeOperator(client.nickname());
+        std::string promoted = channel->promoteFirstMemberIfNoOps();
         client.leaveChannel(*chanIt);
 
         bool isEmpty = true;
@@ -230,6 +231,14 @@ void CommandManager::cmdQuit(Server& server, Client& client, const std::vector<s
         if (isEmpty) {
             delete channel;
             server.removeChannel(*chanIt);
+        } else if (!promoted.empty()) {
+            std::string modeMsg = ":" + server.name() + " MODE " + *chanIt + " +o " + promoted + "\r\n";
+            for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+                if (it->second && it->second->isInChannel(*chanIt)) {
+                    it->second->appendToWriteBuffer(modeMsg);
+                    server.handleClientWrite(*it->second);
+                }
+            }
         }
     }
 

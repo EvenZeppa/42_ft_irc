@@ -37,7 +37,7 @@ void CommandManager::cmdKick(Server& server, Client& client, const std::vector<s
     }
 
     if (!channel->hasMember(targetNick)) {
-        throw IrcReplies(ERR_USERNOTINCHANNEL, targetNick);
+        throw IrcReplies(ERR_USERNOTINCHANNEL, targetNick, channelName);
     }
 
     std::string kickMsg = ":" + client.fullmask() + " KICK " + channelName + 
@@ -52,11 +52,32 @@ void CommandManager::cmdKick(Server& server, Client& client, const std::vector<s
 
     channel->removeMember(targetNick);
     channel->removeOperator(targetNick);
-    
+    std::string promoted = channel->promoteFirstMemberIfNoOps();
+
     for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
         if (it->second && it->second->nickname() == targetNick) {
             it->second->leaveChannel(channelName);
             break;
+        }
+    }
+
+    bool isEmpty = true;
+    for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+        if (it->second && it->second->isInChannel(channelName)) {
+            isEmpty = false;
+            break;
+        }
+    }
+    if (isEmpty) {
+        delete channel;
+        server.removeChannel(channelName);
+    } else if (!promoted.empty()) {
+        std::string modeMsg = ":" + server.name() + " MODE " + channelName + " +o " + promoted + "\r\n";
+        for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+            if (it->second && it->second->isInChannel(channelName)) {
+                it->second->appendToWriteBuffer(modeMsg);
+                server.handleClientWrite(*it->second);
+            }
         }
     }
 }
@@ -92,7 +113,7 @@ void CommandManager::cmdInvite(Server& server, Client& client, const std::vector
     }
 
     if (channel->hasMember(targetNick)) {
-        throw IrcReplies(ERR_USERONCHANNEL, targetNick);
+        throw IrcReplies(ERR_USERONCHANNEL, targetNick, channelName);
     }
 
     channel->addInvited(targetNick);

@@ -105,6 +105,8 @@ public:
 	void removeOperator(const std::string& nickname);
 	/** @brief Check operator status. @param nickname Nickname to query. @return True if operator. */
 	bool hasOperator(const std::string& nickname) const;
+	/** @brief If no operators remain but channel has members, promote first member to op. @return Promoted nickname or empty if none. */
+	std::string promoteFirstMemberIfNoOps();
 
 	/** @brief Add invited user. @param nickname Nickname to invite. */
 	void addInvited(const std::string& nickname);

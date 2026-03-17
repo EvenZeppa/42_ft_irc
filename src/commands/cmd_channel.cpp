@@ -114,6 +114,7 @@ void CommandManager::cmdPart(Server& server, Client& client, const std::vector<s
 
     channel->removeMember(client.nickname());
     channel->removeOperator(client.nickname());
+    std::string promoted = channel->promoteFirstMemberIfNoOps();
     client.leaveChannel(channelName);
 
     bool isEmpty = true;
@@ -126,6 +127,14 @@ void CommandManager::cmdPart(Server& server, Client& client, const std::vector<s
     if (isEmpty) {
         delete channel;
         server.removeChannel(channelName);
+    } else if (!promoted.empty()) {
+        std::string modeMsg = ":" + server.name() + " MODE " + channelName + " +o " + promoted + "\r\n";
+        for (std::map<int, Client*>::iterator it = clients.begin(); it != clients.end(); ++it) {
+            if (it->second && it->second->isInChannel(channelName)) {
+                it->second->appendToWriteBuffer(modeMsg);
+                server.handleClientWrite(*it->second);
+            }
+        }
     }
 }
 
@@ -143,7 +152,7 @@ void CommandManager::cmdTopic(Server& server, Client& client, const std::vector<
 
     if (args.size() == 1) {
         if (channel->topic().empty()) {
-            throw IrcReplies(RPL_NOTOPIC, channelName);
+            throw IrcReplies(RPL_NOTOPIC, client.nickname(), channelName);
         } else {
             std::string topicMsg = ":" + server.name() + " 332 " + client.nickname() + 
                                    " " + channelName + " :" + channel->topic() + "\r\n";

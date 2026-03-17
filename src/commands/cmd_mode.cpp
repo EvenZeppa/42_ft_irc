@@ -128,13 +128,14 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
 
             case 'k':
                 if (add) {
-                    if (paramIndex < args.size()) {
-                        channel->key(args[paramIndex]);
-                        channel->addMode('k');
-                        appliedModes += "+k";
-                        appliedParams += " " + args[paramIndex];
-                        paramIndex++;
+                    if (paramIndex >= args.size()) {
+                        throw IrcReplies(ERR_NEEDMOREPARAMS, "MODE");
                     }
+                    channel->key(args[paramIndex]);
+                    channel->addMode('k');
+                    appliedModes += "+k";
+                    appliedParams += " " + args[paramIndex];
+                    paramIndex++;
                 } else {
                     channel->key("");
                     channel->removeMode('k');
@@ -144,14 +145,16 @@ void CommandManager::cmdMode(Server& server, Client& client, const std::vector<s
 
             case 'l':
                 if (add) {
-                    if (paramIndex < args.size()) {
-                        int limit = stringToInt(args[paramIndex]);
-                        channel->limit(limit);
-                        channel->addMode('l');
-                        appliedModes += "+l";
-                        appliedParams += " " + args[paramIndex];
-                        paramIndex++;
+                    if (paramIndex >= args.size()) {
+                        throw IrcReplies(ERR_NEEDMOREPARAMS, "MODE");
                     }
+                    int limit = stringToInt(args[paramIndex]);
+                    if (limit <= 0) break;
+                    channel->limit(limit);
+                    channel->addMode('l');
+                    appliedModes += "+l";
+                    appliedParams += " " + args[paramIndex];
+                    paramIndex++;
                 } else {
                     channel->limit(0);
                     channel->removeMode('l');

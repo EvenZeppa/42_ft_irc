@@ -81,6 +81,15 @@ bool Channel::hasOperator(const std::string& nickname) const {
 	return _operators.find(nickname) != _operators.end();
 }
 
+std::string Channel::promoteFirstMemberIfNoOps() {
+	if (_operators.empty() && !_members.empty()) {
+		std::string nick = *_members.begin();
+		addOperator(nick);
+		return nick;
+	}
+	return "";
+}
+
 void Channel::addInvited(const std::string& nickname) { _invited.insert(nickname); }
 void Channel::removeInvited(const std::string& nickname) { _invited.erase(nickname); }
 bool Channel::hasInvited(const std::string& nickname) const {

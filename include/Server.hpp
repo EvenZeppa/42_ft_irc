@@ -120,6 +120,8 @@ public:
 
 	/** @brief Flush pending output to a client socket. @param client Target client. */
 	void handleClientWrite(Client& client);
+	/** @brief Update epoll events for a client fd (add/remove EPOLLOUT for pending writes). @param fd Client fd. @param wantOut True to enable EPOLLOUT. */
+	void updateClientEpollEvents(int fd, bool wantOut);
 	/** @brief Read and parse incoming data from a client socket. @param client Target client. */
 	void handleClientRead(Client& client);
 

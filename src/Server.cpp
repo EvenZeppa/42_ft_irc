@@ -364,6 +364,7 @@ bool Server::removeClient(int fd) {
 	if (it == _clients.end())
 		return false;
 
+	epoll_ctl(_epfd, EPOLL_CTL_DEL, fd, NULL);
 	delete it->second;
 	_clients.erase(it);
 
@@ -622,18 +623,40 @@ int Server::handle_event(struct epoll_event ev) {
 
 void Server::handleClientWrite(Client& client) {
 	std::string& writeBuffer = client.writeBuffer();
+	if (writeBuffer.empty()) {
+		updateClientEpollEvents(client.fd(), false);
+		return;
+	}
+	if (client.fd() < 0) return;
+
+	Logger::log(Logger::OUT, client.fd(), writeBuffer, client.nickname());
+	ssize_t bytesSent = send(client.fd(), writeBuffer.c_str(), writeBuffer.size(), 0);
+	if (bytesSent > 0) {
+		std::ostringstream oss;
+		oss << "Sent " << bytesSent << " bytes";
+		Logger::log(Logger::INFO, client.fd(), oss.str(), client.nickname());
+		writeBuffer.erase(0, bytesSent);
+	} else if (bytesSent == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
+		Logger::log(Logger::ERROR, client.fd(), "send() failed", client.nickname());
+		client.fd(-1);
+		return;
+	}
+
 	if (!writeBuffer.empty()) {
-		Logger::log(Logger::OUT, client.fd(), writeBuffer, client.nickname());
-		ssize_t bytesSent = send(client.fd(), writeBuffer.c_str(), writeBuffer.size(), 0);
-		if (bytesSent > 0) {
-			std::ostringstream oss;
-			oss << "Sent " << bytesSent << " bytes";
-			Logger::log(Logger::INFO, client.fd(), oss.str(), client.nickname());
-			writeBuffer.erase(0, bytesSent);
-		} else if (bytesSent == -1 && errno != EAGAIN && errno != EWOULDBLOCK) {
-			Logger::log(Logger::ERROR, client.fd(), "send() failed", client.nickname());
-			client.fd(-1);
-		}
+		updateClientEpollEvents(client.fd(), true);
+	} else {
+		updateClientEpollEvents(client.fd(), false);
+	}
+}
+
+void Server::updateClientEpollEvents(int fd, bool wantOut) {
+	if (fd < 0 || !hasClient(fd)) return;
+	struct epoll_event ev;
+	ev.events = EPOLLIN;
+	if (wantOut) ev.events |= EPOLLOUT;
+	ev.data.fd = fd;
+	if (epoll_ctl(_epfd, EPOLL_CTL_MOD, fd, &ev) == -1) {
+		Logger::log(Logger::ERROR, fd, "epoll_ctl MOD failed");
 	}
 }
 

@@ -63,13 +63,15 @@ class IrcReplies : public std::exception {
 private:   
     int _code;
     std::string _arg;
+    std::string _arg2;
 public:
     /**
      * @brief Construct an IRC reply exception.
      * @param code Numeric IRC code.
      * @param arg Optional contextual argument.
+     * @param arg2 Optional second argument (e.g. for ERR_USERNOTINCHANNEL).
      */
-    IrcReplies(int code, const std::string& arg = "") : _code(code), _arg(arg) {}
+    IrcReplies(int code, const std::string& arg = "", const std::string& arg2 = "") : _code(code), _arg(arg), _arg2(arg2) {}
     /** @brief Destroy the exception object. */
     virtual ~IrcReplies() throw() {}
 
@@ -77,6 +79,8 @@ public:
     int Code() const { return _code; } 
     /** @brief Get contextual argument. @return Optional argument string. */
     const std::string& Arg() const { return _arg; }
+    /** @brief Get second contextual argument. @return Optional second argument string. */
+    const std::string& Arg2() const { return _arg2; }
 
     /** @brief Get textual exception message. @return C-string view over argument. */
     virtual const char* what() const throw() {

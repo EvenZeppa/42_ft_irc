@@ -51,12 +51,12 @@ void CommandManager::executeCommand(Server& server, Client& client, std::string 
         }
 
         if (static_cast<int>(args.size()) < entry.minArgs) {
-            throw IrcReplies(ERR_NEEDMOREPARAMS);
+            throw IrcReplies(ERR_NEEDMOREPARAMS, cmdName);
         }
 
         entry.func(server, client, args);
     } catch (const IrcReplies& reply) {
-        std::string replyMsg = _buildReply(server, reply.Code(), reply.Arg(), "");
+        std::string replyMsg = _buildReply(server, reply.Code(), reply.Arg(), reply.Arg2());
         client.appendToWriteBuffer(replyMsg);
 		server.handleClientWrite(client);
     }
@@ -82,7 +82,7 @@ std::string CommandManager::_buildReply(const Server& server, int code, std::str
             msg += arg1 + " :Channel mode is set to " + arg2;
             break;
         case RPL_NOTOPIC:
-            msg += arg1 + " :No topic is set";
+            msg += arg1 + " " + arg2 + " :No topic is set";
             break;
         case RPL_TOPIC:
             msg += arg1 + " : " + arg2;
