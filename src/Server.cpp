@@ -460,7 +460,8 @@ void initGrammar(Grammar& grammar) {
 
 	grammar.addRule("<nonwhite> ::= 0x21...0xFF");
     grammar.addRule("<SPACE> ::= ' ' { ' ' }");
-    grammar.addRule("<crlf> ::= '\r' '\n'");
+    /* Accept LF-only lines (irssi / many clients); RFC prefers CRLF */
+    grammar.addRule("<crlf> ::= '\r' '\n' | '\n'");
 
     grammar.addRule("<middle> ::= <nospecial> { <nospace> }");
     grammar.addRule("<trailing> ::= { <safechar> }");
