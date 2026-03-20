@@ -181,7 +181,12 @@ A simple bot that connects to the server and sends a random message every 10 sec
 
 ### Bonus: File Transfer (DCC/CTCP)
 
-The server supports DCC file transfer by forwarding `PRIVMSG` and `NOTICE` messages as-is. CTCP messages (including `DCC SEND`) are transmitted without modification. Use a reference IRC client (irssi, WeeChat, HexChat) that supports DCC to transfer files between clients.
+DCC is **client-to-client**: the server only **relays** the CTCP negotiation (`PRIVMSG` / `NOTICE` with `\x01DCC SEND ...\x01`). The actual file bytes never go through the IRC server.
+
+- The IRC grammar allows **CTCP delimiter `0x01`** in trailing parameters so DCC messages are parsed and forwarded (this was missing before and broke transfers).
+- Command **`NOTICE`** is implemented (some clients use it for DCC-related traffic).
+
+Use two clients on the same machine (e.g. irssi) that support DCC; both must be able to reach each other’s listening TCP port (firewall / `localhost`). See `MANUAL_TESTS.md` for a short DCC test procedure.
 
 ---
 

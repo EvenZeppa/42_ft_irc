@@ -451,7 +451,8 @@ void initGrammar(Grammar& grammar) {
 
     grammar.addRule("<accented> ::= 0xA0...0xFF");
 
-    grammar.addRule("<safechar> ::= ' '...'~' | <accented>");
+    /* 0x01 = CTCP delimiter (SOH); required so DCC SEND / file transfer CTCP passes the parser */
+    grammar.addRule("<safechar> ::= ' '...'~' | <accented> | 0x01");
 
     grammar.addRule("<nospace> ::= '!'...'~' | <accented>");
 

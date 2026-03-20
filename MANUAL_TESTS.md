@@ -312,6 +312,23 @@ Le bot rejoint `#test` et envoie un message aléatoire toutes les 10 secondes. R
 
 ---
 
+## 7b) Bonus : transfert de fichiers (DCC)
+
+Le transfert **n’est pas hébergé par le serveur** : le serveur relaie seulement les messages CTCP (`\x01DCC SEND ...\x01`). Les deux clients ouvrent une connexion TCP directe entre eux pour envoyer le fichier.
+
+**Prérequis :** deux instances **irssi** (ou clients compatibles DCC), même machine ou réseau où les ports TCP entre machines sont joignables.
+
+1. Terminal A : `./ircserv 6667 superpass`
+2. Terminal B : `irssi` → `/connect 127.0.0.1 6667 superpass` → `/nick alice`
+3. Terminal C : `irssi` → `/connect 127.0.0.1 6667 superpass` → `/nick bob`
+4. Les deux : `/join #dcc`
+5. Depuis **alice** : `/dcc send bob /chemin/vers/un_petit_fichier.txt` (chemin réel sur la machine)
+6. **bob** doit voir une proposition d’acceptation DCC (`/dcc get` selon la config irssi)
+
+Si le parseur rejetait le message (avant correctif), aucun `DCC SEND` n’arrivait chez le destinataire.
+
+---
+
 ## 8) Astuces utiles IRSSI
 
 - Changer de salon/fenêtre: `Alt` + numéro (ou `/window goto <n>`)
