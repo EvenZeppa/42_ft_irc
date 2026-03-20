@@ -26,6 +26,7 @@ Client::Client() :
 	_isRegistered(false),
 	_lastPing(0),
 	_lastPong(0),
+	_waitingPong(false),
 	_modes(),
 	_readBuffer(""),
 	_writeBuffer(""),
@@ -45,6 +46,7 @@ Client::Client(int fd) :
 	_isRegistered(false),
 	_lastPing(0),
 	_lastPong(0),
+	_waitingPong(false),
 	_modes(),
 	_readBuffer(""),
 	_writeBuffer(""),
@@ -69,6 +71,7 @@ bool Client::isUserReceived() const { return _isUserReceived; }
 bool Client::isRegistered() const { return _isRegistered; }
 time_t Client::lastPing() const { return _lastPing; }
 time_t Client::lastPong() const { return _lastPong; }
+bool Client::waitingPong() const { return _waitingPong; }
 
 Client& Client::realname(const std::string& realname) { _realname = realname; return *this; }
 Client& Client::username(const std::string& username) { _username = username; return *this; }
@@ -82,6 +85,7 @@ Client& Client::userReceived(bool status) { _isUserReceived = status; return *th
 Client& Client::registered(bool status) { _isRegistered = status; return *this; }
 Client& Client::lastPing(time_t timestamp) { _lastPing = timestamp; return *this; }
 Client& Client::lastPong(time_t timestamp) { _lastPong = timestamp; return *this; }
+Client& Client::waitingPong(bool waitingPong) { _waitingPong = waitingPong; return *this; }
 
 void Client::addMode(char mode) { _modes.insert(mode); }
 void Client::removeMode(char mode) { _modes.erase(mode); }

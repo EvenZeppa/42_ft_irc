@@ -33,6 +33,7 @@ private:
 
 	time_t _lastPing;
 	time_t _lastPong;
+	bool _waitingPong;
 
 	std::set<char> _modes;
 
@@ -91,6 +92,8 @@ public:
 	time_t lastPing() const;
 	/** @brief Get last PONG timestamp. @return Unix time value. */
 	time_t lastPong() const;
+	/** @brief Get is waiting pong status. @return Bool. */
+	bool waitingPong() const;
 
 	/** @brief Set real name. @param realname New real name. @return Reference to this client. */
 	Client& realname(const std::string& realname);
@@ -116,6 +119,8 @@ public:
 	Client& lastPing(time_t timestamp);
 	/** @brief Set last PONG timestamp. @param timestamp Unix time. @return Reference to this client. */
 	Client& lastPong(time_t timestamp);
+	/** @brief Set last PONG timestamp. @param timestamp Unix time. @return Reference to this client. */
+	Client& waitingPong(bool waitingPong);
 
 	/** @brief Add a user mode. @param mode Mode flag to insert. */
 	void addMode(char mode);
