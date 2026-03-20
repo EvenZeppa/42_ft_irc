@@ -22,7 +22,6 @@
 #include <cerrno>
 #include <sstream>
 #include <cctype>
-#include <ctime>
 
 #include "Logger.hpp"
 
@@ -548,27 +547,6 @@ int Server::init() {
 	return 0;
 }
 
-void Server::checkClientsPing() {
-	time_t now = std::time(NULL);
-	std::map<int, Client*>::iterator it;
-	for (it = _clients.begin(); it != _clients.end(); it++) {
-		Client *client = it->second;
-		if (!client->isRegistered() || now - client->lastPing() <= 3 || now - client->lastPong() <= 3)
-			continue;
-		if (client->waitingPong()) {
-			std::cout << "Waiting true" << std::endl;
-			removeClient(client->fd());
-		} else {
-			std::cout << "Waiting false" << std::endl;
-			client->lastPing(now);
-			client->waitingPong(true);
-			std::string msg = ":" + name() + " PING " + name() + " :" + client->realname() + "\r\n";
-			client->appendToWriteBuffer(msg);
-			handleClientWrite(*client);
-		}
-	}
-}
-
 void Server::run() {
 	while (_running) {
 		struct epoll_event rev[1028];
@@ -583,7 +561,6 @@ void Server::run() {
 			for (int i = 0; i < num_events; ++i) {
 				handle_event(rev[i]);
 			}
-		checkClientsPing();
 	}
 }
 

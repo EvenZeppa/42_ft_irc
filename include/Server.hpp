@@ -111,8 +111,6 @@ public:
 
 	/** @brief Initialize sockets, epoll, and parser grammar. @return 0 on success, -1 on failure. */
 	int init();
-	/** @brief Check if clients still connected. */
-	void checkClientsPing();
 	/** @brief Start the main event loop until stopped. */
 	void run();
 	/** @brief Stop the server and release resources. */
