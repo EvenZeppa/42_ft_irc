@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
 	}
 
 	send_line(sock, "PASS " + password);
-	send_line(sock, "NICK ft_irc_bot");
+	send_line(sock, "NICK bot");
 	send_line(sock, "USER bot 0 * :ft_irc bonus bot");
 	sleep(1);
 	send_line(sock, "JOIN " + channel);
