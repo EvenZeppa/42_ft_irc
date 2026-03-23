@@ -248,7 +248,19 @@ Expression* Grammar::parseFactor(BNFTokenizer& tz) {
             
                 return internIfEnabled(e);
         }
-        
+        // Standalone hex token must match one byte (e.g. 0x01), not string "0x01".
+        if (t.type == Token::TOK_HEX) {
+            unsigned char ch = tokenToChar(t);
+            Expression* e = createExpr(Expression::EXPR_CHAR_RANGE);
+            e->charRange = CharRange(ch, ch);
+
+            std::stringstream ss;
+            ss << "parseFactor: EXPR_CHAR_RANGE(single hex), ch=" << (int)ch;
+            DEBUG_MSG(ss.str());
+
+            return internIfEnabled(e);
+        }
+
         // Regular terminal (not a range)
         Expression* e = createExpr(Expression::EXPR_TERMINAL);
         e->value = t.value;
@@ -257,7 +269,7 @@ Expression* Grammar::parseFactor(BNFTokenizer& tz) {
         ss << "parseFactor: EXPR_TERMINAL, value=" << t.value;
         DEBUG_MSG(ss.str());
 
-            return internIfEnabled(e);
+        return internIfEnabled(e);
     }
 
     if (t.type == Token::TOK_SYMBOL) {
